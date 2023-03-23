@@ -1,9 +1,7 @@
-import * as pckg from "./package.json";
 import { fileURLToPath, URL } from "url";
-import path from "path";
 import { defineConfig } from "vite";
+
 import vue from "@vitejs/plugin-vue";
-import federation from "@originjs/vite-plugin-federation";
 import svgLoader from "vite-svg-loader";
 
 // https://vitejs.dev/config/
@@ -50,50 +48,5 @@ export default defineConfig({
     ],
     dedupe: ["vue", "vue-router"],
   },
-  plugins: [
-    vue(),
-    federation({
-      name: "login",
-      filename: "remoteEntry.js",
-      exposes: {
-        // layouts
-        "./Layout": "./src/layout/Default.vue",
-
-        // views
-        "./Login": "./src/views/Login.vue",
-        "./Register": "./src/views/Register.vue",
-        "./ForgotPassword": "./src/views/ForgotPassword.vue",
-
-        // components
-        "./LoginForm": "./src/components/LoginForm.vue",
-        "./RegisterForm": "./src/components/RegisterForm.vue",
-        "./ForgotPasswordForm": "./src/components/ForgotPasswordForm.vue",
-      },
-      shared: [
-        {
-          vue: {
-            eager: true,
-            singleton: true,
-            requiredVersion: pckg.dependencies.vue,
-            strictVersion: true,
-          },
-        },
-        "vue-router",
-      ],
-    }),
-    svgLoader(),
-  ],
-  build: {
-    assetsInlineLimit: 40960,
-    target: "esnext",
-    minify: true,
-    cssCodeSplit: false,
-    sourcemap: true,
-    rollupOptions: {
-      output: {
-        format: "esm",
-        minifyInternalExports: false,
-      },
-    },
-  },
+  plugins: [vue(), svgLoader()],
 });

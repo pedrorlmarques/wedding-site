@@ -3,7 +3,6 @@ import { useToast, POSITION } from "vue-toastification";
 import { supabase } from "@/composables/useSupabase";
 import { Session, Provider } from "@supabase/gotrue-js/dist/main/lib/types";
 
-const user = ref<User | null>(null);
 const userSession = ref<Session | null>(null);
 
 const toast = useToast();
@@ -43,11 +42,10 @@ export const useAuth = () => {
   ) => {
     try {
       const { data, error } = await apiCallback();
-      console.log(data);
       if (successMessage && data.user) successToast.value(successMessage);
       if (errorMessage && error) errorToast.value(errorMessage);
       if (error) throw error;
-      return user;
+      return data;
     } catch (error) {
       console.error(error);
     }
@@ -127,7 +125,7 @@ export const useAuth = () => {
   /**
    * Check if user is logged in or not
    */
-  const isLoggedIn = () => !!user.value;
+  const isLoggedIn = () => !!userSession.value?.user;
 
   /**
    * send user an email to reset their password
@@ -158,7 +156,6 @@ export const useAuth = () => {
   };
 
   return {
-    user,
     userSession,
     isLoggedIn,
     handleLogin,
