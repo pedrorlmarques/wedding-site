@@ -1,12 +1,18 @@
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { createApp } from "vue";
+import { plugin, defaultConfig } from "@formkit/vue";
+import Toast, { PluginOptions } from "vue-toastification";
+import App from "./App.vue";
+import router from "@/router";
+import "./main.css";
+import "vue-toastification/dist/index.css";
 
-import { AppModule } from './app/app.module';
-import { environment } from './environments/environment';
+const options: PluginOptions = {
+  timeout: 2000,
+};
 
-if (environment.production) {
-  enableProdMode();
-}
+const app = createApp(App);
 
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.error(err));
+app.use(plugin, defaultConfig);
+app.use(Toast, options);
+app.use(router);
+app.mount("#app");
