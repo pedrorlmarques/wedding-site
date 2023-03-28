@@ -2,7 +2,7 @@
   <main>
     <div class="container mx-auto">
       <Timer class="my-8" />
-      <img class="max-w-xl my-8 mx-auto" src="@/assets/invitation.jpeg" />
+      <img class="max-w-xl my-8 mx-auto" src="@/assets/Invitation.jpeg" />
 
       <div class="grid grid-cols-1 md:grid-cols-2">
         <div class="flex justify-center items-center">

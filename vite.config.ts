@@ -48,5 +48,6 @@ export default defineConfig({
     ],
     dedupe: ["vue", "vue-router"],
   },
+  assetsInclude: ["src/assets"],
   plugins: [vue(), svgLoader()],
 });
