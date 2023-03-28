@@ -74,7 +74,7 @@
 <script lang="ts" setup>
 import { reactive, onBeforeMount } from "vue";
 import { useAuth } from "@/composables/useAuth";
-import GoogleIcon from "@assets/google.svg?component";
+import GoogleIcon from "@/assets/google.svg?component";
 import { Provider } from "@supabase/gotrue-js/dist/main/lib/types";
 import router from "@/router";
 

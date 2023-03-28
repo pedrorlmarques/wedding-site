@@ -2,7 +2,7 @@
   <main>
     <div class="container mx-auto">
       <Timer class="my-8" />
-      <img class="max-w-xl my-8 mx-auto" src="@assets/invitation.jpeg" />
+      <img class="max-w-xl my-8 mx-auto" src="@/assets/invitation.jpeg" />
 
       <div class="grid grid-cols-1 md:grid-cols-2">
         <div class="flex justify-center items-center">
@@ -59,10 +59,10 @@
 <script setup>
 import Timer from "@components/Timer/index.vue";
 import AnchorToPagesButton from "@components/AnchorToPagesButton/index.vue";
-import WeddingInvitationSvg from "@assets/wedding-invitation.svg?component";
-import CameraSvg from "@assets/camera.svg?component";
-import DiscoBallSvg from "@assets/disco-ball.svg?component";
-import ForkAndSpoonSvg from "@assets/fork-and-spoon.svg?component";
+import WeddingInvitationSvg from "@/assets/wedding-invitation.svg?component";
+import CameraSvg from "@/assets/camera.svg?component";
+import DiscoBallSvg from "@/assets/disco-ball.svg?component";
+import ForkAndSpoonSvg from "@/assets/fork-and-spoon.svg?component";
 </script>
 
 <style scoped lang="postcss">

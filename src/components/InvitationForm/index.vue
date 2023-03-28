@@ -156,7 +156,7 @@
 </template>
 <script setup>
 import { ref } from "vue";
-import Arrow from "@assets/arrow-down-up.svg?component";
+import Arrow from "@/assets/arrow-down-up.svg?component";
 
 const invitedPerson = ref({
   name: "",

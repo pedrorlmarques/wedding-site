@@ -11,7 +11,7 @@
 </template>
 
 <script setup name="Layout">
-import RingsIcon from "@assets/rings.svg?component";
+import RingsIcon from "@/assets/rings.svg?component";
 </script>
 
 <style lang="postcss">

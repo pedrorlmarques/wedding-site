@@ -19,6 +19,6 @@
 
 <script lang="ts" setup>
 import Layout from "@layout/Default.vue";
-import ArrowLeftIcon from "@assets/arrow-left.svg?component";
+import ArrowLeftIcon from "@/assets/arrow-left.svg?component";
 import ForgotPasswordForm from "@components/ForgotPasswordForm/index.vue";
 </script>

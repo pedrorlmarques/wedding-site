@@ -15,6 +15,6 @@
 
 <script setup>
 import Layout from "@layout/Default.vue";
-import ArrowLeftIcon from "@assets/arrow-left.svg?component";
+import ArrowLeftIcon from "@/assets/arrow-left.svg?component";
 import RegisterForm from "@components/RegisterForm/index.vue";
 </script>
