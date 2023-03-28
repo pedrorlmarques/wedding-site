@@ -1,0 +1,65 @@
+<template>
+  <router-link :to="path" class="anchor-wrapper">
+    <slot name="icon"></slot>
+    <router-link :to="path">
+      <h5>{{ title }}</h5>
+    </router-link>
+    <p>
+      <slot name="description"></slot>
+    </p>
+    <router-link
+      :to="path"
+      class="inline-flex items-center text-primary-600 hover:underline"
+    >
+      Segue aqui
+      <svg
+        class="open-svg"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"
+        ></path>
+        <path
+          d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"
+        ></path>
+      </svg>
+    </router-link>
+  </router-link>
+</template>
+<script setup lang="ts">
+import { defineProps } from "vue";
+
+defineProps({
+  title: {
+    type: String,
+    required: true,
+  },
+  path: {
+    type: String,
+    required: true,
+  },
+});
+</script>
+<style lang="postcss">
+.anchor-wrapper {
+  @apply max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow mb-16;
+
+  & svg {
+    @apply w-10 h-10 mb-2 text-gray-500 fill-gray-500;
+  }
+
+  & h5 {
+    @apply mb-2 text-2xl font-semibold tracking-tight text-gray-900;
+  }
+
+  & p {
+    @apply mb-3 font-normal text-gray-500;
+  }
+
+  & svg.open-svg {
+    @apply w-5 h-5 ml-2 mb-0;
+  }
+}
+</style>

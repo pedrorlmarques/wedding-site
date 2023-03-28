@@ -35,6 +35,7 @@ module.exports = {
       },
     },
   },
+  plugins: [require("@tailwindcss/typography")],
   variants: {
     extend: {
       "ring-3": ["hover", "active", "focus"],

@@ -72,13 +72,13 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from "vue";
+import { reactive, onBeforeMount } from "vue";
 import { useAuth } from "@/composables/useAuth";
 import GoogleIcon from "@assets/google.svg?component";
 import { Provider } from "@supabase/gotrue-js/dist/main/lib/types";
 import router from "@/router";
 
-const { handleLogin, handleOAuthLogin } = useAuth();
+const { handleLogin, handleOAuthLogin, isLoggedIn } = useAuth();
 
 const user: User = reactive({
   email: "",
@@ -92,6 +92,12 @@ const handleSubmit = async (provider?: Provider) => {
     await handleLogin({ email: user.email, password: user.password });
   }
 
-  router.push({ name: "Invitation" });
+  router.push("/");
 };
+
+onBeforeMount(() => {
+  if (isLoggedIn()) {
+    router.push("/");
+  }
+});
 </script>

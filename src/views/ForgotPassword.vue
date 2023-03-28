@@ -22,5 +22,3 @@ import Layout from "@layout/Default.vue";
 import ArrowLeftIcon from "@assets/arrow-left.svg?component";
 import ForgotPasswordForm from "@components/ForgotPasswordForm/index.vue";
 </script>
-
-<style lang="postcss" scoped></style>

@@ -11,16 +11,16 @@
           <p class="mb-2 text-lg text-zinc-500">
             Nós ficamos felizes que te tenhas registado na plataforma do nosso
             casamento. Mandamos um email de confirmação para
-            <span class="font-medium text-secondary-500">{{
-              $route.query.email
-            }}</span
+            <span class="font-medium text-secondary-500">
+              {{ $route.query.email }} </span
             >.
           </p>
           <router-link
             as="a"
-            to="/invitation"
+            to="/"
             class="mt-3 inline-block w-96 rounded bg-primary-600 px-5 py-3 font-medium text-white shadow-md shadow-indigo-500/20 hover:bg-primary-700"
-            >Abrir a aplicação
+          >
+            Abrir a aplicação
           </router-link>
         </div>
       </div>

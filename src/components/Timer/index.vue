@@ -30,7 +30,7 @@ const date = reactive({
 });
 
 const calculateTimeLeft = () => {
-  const difference = +new Date("2023-05-08T12:30:00") - +new Date();
+  const difference = +new Date("2023-08-05T12:30:00") - +new Date();
 
   if (difference > 0) {
     date.days = Math.floor(difference / (1000 * 60 * 60 * 24));

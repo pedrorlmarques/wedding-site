@@ -12,13 +12,4 @@
 <script setup>
 import Layout from "@layout/Default.vue";
 import LoginForm from "@/components/LoginForm/index.vue";
-import { useAuth } from "@composables/useAuth";
-import { useRouter } from "vue-router";
-
-const { isLoggedIn } = useAuth();
-const router = useRouter();
-
-if (isLoggedIn()) {
-  router.push({ name: "Invitation" });
-}
 </script>

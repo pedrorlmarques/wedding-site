@@ -9,6 +9,14 @@ const routes = [
   },
   {
     path: "/",
+    name: "Home",
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import("@/views/Home.vue"),
+  },
+  {
+    path: "/convite",
     name: "Invitation",
     meta: {
       requiresAuth: true,
@@ -42,11 +50,13 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to) => {
+router.beforeEach((to, _from, next) => {
   const { isLoggedIn } = useAuth();
-  if (!isLoggedIn() && to.meta.requiresAuth) {
-    return { name: "Login" };
-  }
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+
+  if (requiresAuth && !isLoggedIn()) next("/login");
+  else if (!requiresAuth && isLoggedIn()) next("/");
+  else next();
 });
 
 export default router;
