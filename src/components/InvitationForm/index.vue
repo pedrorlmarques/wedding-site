@@ -51,7 +51,7 @@
         data-accordion="collapse"
         v-for="(guest, guestIdx) in invitedPerson.guests"
       >
-        <template v-if="guest.added && !guest.isRemoved">
+        <template v-if="guest.added">
           <h2 class="m-0 p-0" :id="`accordion-${guestIdx}`">
             <button
               type="button"
@@ -92,7 +92,7 @@
                 <button
                   type="button"
                   class="remove-btn"
-                  @click="removeGuest(guest)"
+                  @click="removeGuest(guestIdx)"
                 >
                   <DeleteSVG />
                 </button>
@@ -156,8 +156,8 @@
     </button>
   </FormKit>
 </template>
-<script setup>
-import { reactive, onMounted } from "vue";
+<script setup lang="ts">
+import { ref, reactive, onMounted } from "vue";
 import PlusSVG from "@/assets/plus.svg?component";
 import Arrow from "@/assets/arrow-down-up.svg?component";
 import EditPencilSVG from "@/assets/edit-pencil.svg?component";
@@ -168,39 +168,38 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 const { userSession } = useAuth();
-const { addNewGuests, getConfirmations, removeGuests } = useConfirmations();
+const { addNewGuests, getConfirmations, updateGuests } = useConfirmations();
 
-const invitedPerson = reactive({
-  name: userSession.value.user.user_metadata.full_name || "",
-  uuid: userSession.value.user.id,
+const guestId = ref<string>("");
+const invitedPerson = reactive<InvitedPerson>({
+  name: userSession.value?.user.user_metadata.full_name || "",
+  uuid: userSession.value?.user.id,
   guests: [],
 });
 
-const addGuestInput = (oldGuest) => {
-  oldGuest.added = true;
+const addGuestInput = (guest: Guest) => {
+  guest.added = true;
 };
 
 const addNewGuest = () => {
-  invitedPerson.value.guests.push({
+  const newGuest: Guest = {
     name: "",
     restrictions: "",
-    isRemoved: false,
-    isEdited: false,
     added: false,
     isOpen: false,
-  });
+  };
+  invitedPerson.guests = [...invitedPerson.guests, newGuest];
 };
 
-const editedGuest = (guest) => {
-  guest.isEdited = true;
+const editedGuest = (guest: Guest) => {
   guest.added = false;
 };
 
-const removeGuest = (guest) => {
-  guest.isRemoved = true;
+const removeGuest = (guestIndex: Number) => {
+  invitedPerson.guests.splice(Number(guestIndex), 1);
 };
 
-const toggleAccordion = (guest) => {
+const toggleAccordion = (guest: Guest) => {
   guest.isOpen = !guest.isOpen;
 };
 
@@ -208,58 +207,32 @@ const checkIfAllGuestsAreAdded = () =>
   invitedPerson.guests?.every((guest) => guest.added);
 
 const handleInvitation = async () => {
-  const removedGuests = invitedPerson.guests
-    .filter((guest) => !guest.isRemoved)
-    .map((guest) => ({
-      name: guest.name,
-      restrictions: guest.restrictions,
-    }));
-
-  const editedGuests = invitedPerson.guests
-    .filter((guest) => guest.isEdited)
-    .map((guest) => ({
-      name: guest.name,
-      restrictions: guest.restrictions,
-    }));
-
-  const newGuests = invitedPerson.guests
-    .filter((guest) => guest.added && !guest.isEdited && !guest.isRemoved)
-    .map((guest) => ({
-      name: guest.name,
-      restrictions: guest.restrictions,
-    }));
-
-  if (newGuests) {
-    await addNewGuests({ ...invitedPerson, guests: newGuests });
-  } else if (editedGuests) {
-    await addNewGuests({ ...invitedPerson, guests: editedGuests });
-  } else if (removedGuests) {
-    await removedGuests({ ...invitedPerson, guests: removedGuests });
+  if (!guestId.value) {
+    await addNewGuests(invitedPerson);
+  } else {
+    await updateGuests(invitedPerson);
   }
 
   // router.push("/");
 };
 
-const updateInvitedPersonGuests = (guests) => {
-  let allGuests = [];
-  invitedPerson.guests = guests.map(({ id, companions }) => {
-    const guests = JSON.parse(companions);
-
-    guests.forEach((guest) => {
-      guest.id = id;
-      guest.added = true;
-      guest.isOpen = false;
-    });
-
-    allGuests = [...allGuests, ...guests];
-  });
-
-  invitedPerson.guests = allGuests;
+const updateGuestsOnForm = (guests: GuestsFromDB[]) => {
+  const companionFromDB = guests[0]?.companions;
+  invitedPerson.guests = companionFromDB ? JSON.parse(companionFromDB) : [];
 };
 
 onMounted(async () => {
-  const getAllPastInvitedGuests = await getConfirmations(invitedPerson.uuid);
-  updateInvitedPersonGuests(getAllPastInvitedGuests);
+  if (invitedPerson.uuid) {
+    const getAllPastInvitedGuests: GuestsFromDB[] = await getConfirmations(
+      invitedPerson.uuid
+    );
+
+    if (getAllPastInvitedGuests.length) {
+      guestId.value = getAllPastInvitedGuests[0].id;
+    }
+
+    updateGuestsOnForm(getAllPastInvitedGuests);
+  }
 });
 </script>
 

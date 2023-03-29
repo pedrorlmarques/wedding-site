@@ -67,11 +67,17 @@ export const useConfirmations = () => {
     );
   };
 
-  const removeGuests = async (guestId: string) => {
+  const updateGuests = async (userWithGuests: InvitedPerson) => {
     return await handleApiCall(
       () =>
         // @ts-ignore
-        supabase.from("confirmations").delete().eq("user_id", guestId).single(),
+        supabase
+          .from("confirmations")
+          .update({
+            user_id: userWithGuests.uuid,
+            companions: JSON.stringify(userWithGuests.guests),
+          })
+          .eq("id", userWithGuests.uuid),
       "Os teus convidados já foram removidos da lista de confirmações. Obrigado!",
       "Ocorreu um erro ao remover os convidados da lista de confirmações. Por favor, tenta novamente."
     );
@@ -87,7 +93,7 @@ export const useConfirmations = () => {
   return {
     userSession,
     addNewGuests,
-    removeGuests,
+    updateGuests,
     getConfirmations,
   };
 };
