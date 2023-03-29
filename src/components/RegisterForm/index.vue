@@ -10,7 +10,21 @@
       própria password, ou faça login instantaneamente com a sua conta Google.
     </p>
     <div>
-      <label for="email">O seu e-mail</label>
+      <label for="name">Nome <span class="text-red-500">*</span></label>
+      <FormKit
+        type="text"
+        name="name"
+        id="name"
+        placeholder="o seu nome"
+        v-model="user.name"
+        validation="required"
+        :validation-messages="{
+          required: 'Por favor insira o seu nome',
+        }"
+      />
+    </div>
+    <div>
+      <label for="email">E-mail <span class="text-red-500">*</span></label>
       <FormKit
         type="email"
         name="email"
@@ -29,7 +43,7 @@
         <label
           for="password"
           class="block mb-2 text-sm font-medium text-gray-900"
-          >Password</label
+          >Password <span class="text-red-500">*</span></label
         >
         <FormKit
           type="password"
@@ -49,7 +63,7 @@
           for="password_confirm"
           class="block mb-2 text-sm font-medium text-gray-900"
         >
-          Confirmação da Password
+          Confirmação da Password <span class="text-red-500">*</span>
         </label>
         <FormKit
           type="password"
@@ -68,6 +82,7 @@
     <button type="submit" :disabled="!valid">Criar uma conta</button>
   </FormKit>
 </template>
+
 <script setup lang="ts">
 import { reactive } from "vue";
 import { useAuth } from "@/composables/useAuth";
@@ -78,12 +93,17 @@ const auth = useAuth();
 
 const user: User = reactive({
   email: "",
+  name: "",
   password: "",
   confirmPassword: "",
 });
 
 const handleSubmit = () => {
-  auth.handleSignup({ email: user.email, password: user.password });
+  auth.handleSignup({
+    email: user.email,
+    password: user.password,
+    name: user.name,
+  });
   router.push({
     name: "EmailConfirmation",
     query: { email: user.email },

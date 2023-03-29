@@ -49,3 +49,15 @@
   src: url("./assets/static/PlusJakartaSans-Thin.ttf") format("truetype");
   font-weight: 100;
 }
+
+@font-face {
+  font-family: "Bacalisties";
+  src: url("./assets/static/Bacalisties.ttf") format("truetype");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "OmegaSans";
+  src: url("./assets/static/OmegaSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+}

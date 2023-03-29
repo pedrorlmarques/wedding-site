@@ -1,11 +1,9 @@
 <template>
-  <section class="bg-primary-100">
+  <section>
     <div class="wrapper">
-      <div class="symbol">
-        <RingsIcon class="rings" />
+      <div class="prose">
+        <slot></slot>
       </div>
-      <h3>Casamento Maria Inês e Pedro</h3>
-      <slot></slot>
     </div>
   </section>
 </template>
@@ -15,18 +13,22 @@ import RingsIcon from "@/assets/rings.svg?component";
 </script>
 
 <style lang="postcss">
-.wrapper {
-  @apply flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0;
+body {
+  @apply bg-primary-100;
+}
 
-  & h3 {
-    @apply text-2xl font-bold text-white md:text-3xl my-8;
+.wrapper {
+  @apply flex flex-col items-center justify-center px-6 mx-auto min-h-screen h-full;
+
+  & .wedding-font {
+    @apply text-6xl text-white my-8 text-center font-medium;
   }
 
   & .symbol {
-    @apply flex bg-transparent rounded-full p-4 border-solid border-4 border-secondary-400;
+    @apply flex bg-transparent rounded-full p-4 border-solid border-4 border-white;
 
     & .rings {
-      @apply w-16 h-16 fill-secondary-400;
+      @apply w-16 h-16 fill-white;
     }
 
     > img {

@@ -43,14 +43,16 @@
         v-model="user.password"
       />
     </div>
-    <div class="flex items-center justify-between">
-      <div class="flex items-start">
+    <div class="flex flex-row items-center justify-between">
+      <div class="flex flex-row items-start">
         <div class="flex items-center h-5">
           <input
             id="remember"
             aria-describedby="remember"
             type="checkbox"
             class="checkbox"
+            v-model="user.rememberMe"
+            @click="rememberMe()"
           />
         </div>
         <div class="ml-3 text-sm">
@@ -73,6 +75,7 @@
 
 <script lang="ts" setup>
 import { reactive, onBeforeMount } from "vue";
+import { useStorage } from "@vueuse/core";
 import { useAuth } from "@/composables/useAuth";
 import GoogleIcon from "@/assets/google.svg?component";
 import { Provider } from "@supabase/gotrue-js/dist/main/lib/types";
@@ -80,9 +83,12 @@ import router from "@/router";
 
 const { handleLogin, handleOAuthLogin, isLoggedIn } = useAuth();
 
-const user: User = reactive({
-  email: "",
+const rememberedUser = JSON.parse(localStorage.getItem("user") || "{}") as User;
+
+let user: User = reactive({
+  email: rememberedUser?.email || "",
   password: "",
+  rememberMe: false,
 });
 
 const handleSubmit = async (provider?: Provider) => {
@@ -95,9 +101,26 @@ const handleSubmit = async (provider?: Provider) => {
   router.push("/");
 };
 
+const rememberMe = () => {
+  user.rememberMe = !user.rememberMe;
+
+  if (user.rememberMe) {
+    useStorage("user", { ...user, rememberMe: true }, localStorage);
+  } else {
+    localStorage.removeItem("user");
+    user = {
+      email: "",
+      password: "",
+      rememberMe: false,
+    };
+  }
+};
+
 onBeforeMount(() => {
   if (isLoggedIn()) {
     router.push("/");
   }
 });
 </script>
+
+<styles lang="postcss" scoped></styles>

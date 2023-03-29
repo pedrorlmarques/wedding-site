@@ -1,4 +1,4 @@
-import { Ref, computed, ref } from "vue";
+import { computed, ref } from "vue";
 import { useToast, POSITION } from "vue-toastification";
 import { supabase } from "@/composables/useSupabase";
 import { Session, Provider } from "@supabase/gotrue-js/dist/main/lib/types";
@@ -107,7 +107,7 @@ export const useAuth = () => {
    * Register
    * @param credentials
    */
-  const handleSignup = async ({ email, password }: Credentials) => {
+  const handleSignup = async ({ email, password, name }: Credentials) => {
     await handleApiCall(
       () =>
         supabase.auth.signUp({
@@ -115,6 +115,7 @@ export const useAuth = () => {
           password,
           options: {
             emailRedirectTo: import.meta.env.VITE_BASE_URL,
+            data: { name },
           },
         }),
       "Registo feito com sucesso!",

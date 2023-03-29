@@ -44,7 +44,11 @@ defineProps({
 </script>
 <style lang="postcss">
 .anchor-wrapper {
-  @apply max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow mb-16;
+  @apply w-full flex flex-col justify-items-center items-start p-6 bg-white border border-gray-200 rounded-lg shadow my-4 no-underline;
+
+  & a {
+    @apply no-underline;
+  }
 
   & svg {
     @apply w-10 h-10 mb-2 text-gray-500 fill-gray-500;

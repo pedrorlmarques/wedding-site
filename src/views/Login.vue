@@ -1,8 +1,8 @@
 <template>
   <Layout>
     <div class="card">
-      <div class="space">
-        <h1 class="hello">Olá 👋 Faz login com a tua conta</h1>
+      <div class="space prose">
+        <h1 class="hello">Casamento Maria Inês & Pedro</h1>
         <LoginForm />
       </div>
     </div>

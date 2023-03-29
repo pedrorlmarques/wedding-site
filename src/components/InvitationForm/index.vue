@@ -1,38 +1,4 @@
 <template>
-  <!--  <div class="my-16">
-    <div class="grid grid-cols-4 gap-4 max-w-6xl mx-auto">
-      <div>
-        <glassShoe class="img" />
-        <h2>Chegada dos convidados</h2>
-        <p>
-          Iremos ter aqui muita diversão, mas não podemos revelar tudo aqui. Vai
-          ser um dia cheio de emoções
-        </p>
-      </div>
-      <div>
-        <church class="img" />
-        <h2>Cerimónia</h2>
-        <p>
-          Vamos casar-nos pela igreja. Vai ser um dia muito especial para nós.
-        </p>
-      </div>
-      <div>
-        <camera class="img" />
-        <h2>Tira fotos!</h2>
-        <p>
-          Sim sim, podes tirar fotos! Até temos aqui esta página onde podes
-          fazer upload das fotos que vais tirando ao longo do dia!
-        </p>
-      </div>
-      <div>
-        <cake class="img" />
-        <h2>Bolo do Casamento</h2>
-        <p>
-          Até que chega o momento mais esperado do dia, o bolo do casamento!
-        </p>
-      </div>
-    </div>
-    <h1>Vens ao nosso Casamento?</h1> -->
   <FormKit type="form" :actions="false" #default="{ state: { valid } }">
     <div>
       <label for="name"
@@ -53,11 +19,39 @@
       <label for="guests">Convidados</label>
 
       <div
+        v-show="invitedPerson.guests.length === 0"
+        class="alert alert-warning"
+        role="alert"
+      >
+        <svg
+          aria-hidden="true"
+          class="flex-shrink-0 inline w-5 h-5 mr-3"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+        <span class="sr-only">Info</span>
+        <p class="description">
+          <span class="font-medium">Atenção!</span>
+          Este aviso aparece apenas caso não queiras mesmo levar convidados, e
+          quando adicionares não te esqueças de referir as suas
+          <strong>restrições alimentares</strong> ou outras observações.
+        </p>
+      </div>
+
+      <div
+        class="accordion"
         id="accordion-collapse"
         data-accordion="collapse"
         v-for="(guest, guestIdx) in invitedPerson.guests"
       >
-        <template v-if="guest.added">
+        <template v-if="guest.added && !guest.isRemoved">
           <h2 class="m-0 p-0" :id="`accordion-${guestIdx}`">
             <button
               type="button"
@@ -79,20 +73,28 @@
             :class="guest.isOpen ? '' : 'hidden'"
             :aria-labelledby="`accordion-${guestIdx}`"
           >
-            <div class="p-2.5 px-0 border border-b-0 border-gray-200 text-left">
-              <p class="mb-2 text-gray-500 dark:text-gray-400">
-                Observações: {{ guest.restrictions }}
+            <div class="restrictions--wrapper">
+              <p class="restrictions--description">
+                {{
+                  guest.restrictions
+                    ? `Observações: ${guest.restrictions}`
+                    : "Sem observações"
+                }}
               </p>
-              <div class="flex flex-row">
-                <button type="button" @click="() => (guest.added = false)">
-                  Editar
+              <div class="flex flex-row justify-end">
+                <button
+                  type="button"
+                  class="edit-btn"
+                  @click="editedGuest(guest)"
+                >
+                  <EditPencilSVG />
                 </button>
                 <button
                   type="button"
-                  class="bg-red-500 hover:bg-red-300"
-                  @click="removeGuest(guestIdx)"
+                  class="remove-btn"
+                  @click="removeGuest(guest)"
                 >
-                  Remover
+                  <DeleteSVG />
                 </button>
               </div>
             </div>
@@ -132,7 +134,7 @@
           @click="addGuestInput(guest)"
           :disabled="!valid"
         >
-          Adicionar convidado
+          <PlusSVG class="plus-svg" />
         </button>
       </FormKit>
       <button
@@ -141,7 +143,7 @@
         v-if="!invitedPerson.guests.length || checkIfAllGuestsAreAdded()"
         @click="() => addNewGuest()"
       >
-        Adicionar convidado
+        <PlusSVG class="plus-svg" />
       </button>
     </div>
     <button
@@ -155,11 +157,22 @@
   </FormKit>
 </template>
 <script setup>
-import { ref } from "vue";
+import { reactive, onMounted } from "vue";
+import PlusSVG from "@/assets/plus.svg?component";
 import Arrow from "@/assets/arrow-down-up.svg?component";
+import EditPencilSVG from "@/assets/edit-pencil.svg?component";
+import DeleteSVG from "@/assets/delete.svg?component";
+import { useAuth } from "@/composables/useAuth";
+import { useConfirmations } from "@/composables/useConfirmations";
+import { useRouter } from "vue-router";
 
-const invitedPerson = ref({
-  name: "",
+const router = useRouter();
+const { userSession } = useAuth();
+const { addNewGuests, getConfirmations, removeGuests } = useConfirmations();
+
+const invitedPerson = reactive({
+  name: userSession.value.user.user_metadata.full_name || "",
+  uuid: userSession.value.user.id,
   guests: [],
 });
 
@@ -171,13 +184,20 @@ const addNewGuest = () => {
   invitedPerson.value.guests.push({
     name: "",
     restrictions: "",
+    isRemoved: false,
+    isEdited: false,
     added: false,
     isOpen: false,
   });
 };
 
-const removeGuest = (guestIdx) => {
-  invitedPerson.value.guests.splice(guestIdx, 1);
+const editedGuest = (guest) => {
+  guest.isEdited = true;
+  guest.added = false;
+};
+
+const removeGuest = (guest) => {
+  guest.isRemoved = true;
 };
 
 const toggleAccordion = (guest) => {
@@ -185,19 +205,67 @@ const toggleAccordion = (guest) => {
 };
 
 const checkIfAllGuestsAreAdded = () =>
-  invitedPerson.value.guests?.every((guest) => guest.added);
+  invitedPerson.guests?.every((guest) => guest.added);
 
-const handleInvitation = () => {
-  console.log(invitedPerson.value);
+const handleInvitation = async () => {
+  const removedGuests = invitedPerson.guests
+    .filter((guest) => !guest.isRemoved)
+    .map((guest) => ({
+      name: guest.name,
+      restrictions: guest.restrictions,
+    }));
+
+  const editedGuests = invitedPerson.guests
+    .filter((guest) => guest.isEdited)
+    .map((guest) => ({
+      name: guest.name,
+      restrictions: guest.restrictions,
+    }));
+
+  const newGuests = invitedPerson.guests
+    .filter((guest) => guest.added && !guest.isEdited && !guest.isRemoved)
+    .map((guest) => ({
+      name: guest.name,
+      restrictions: guest.restrictions,
+    }));
+
+  if (newGuests) {
+    await addNewGuests({ ...invitedPerson, guests: newGuests });
+  } else if (editedGuests) {
+    await addNewGuests({ ...invitedPerson, guests: editedGuests });
+  } else if (removedGuests) {
+    await removedGuests({ ...invitedPerson, guests: removedGuests });
+  }
+
+  // router.push("/");
 };
-</script>
-<style lang="postcss">
-h1 {
-  @apply text-4xl font-bold text-center my-8;
-}
 
+const updateInvitedPersonGuests = (guests) => {
+  let allGuests = [];
+  invitedPerson.guests = guests.map(({ id, companions }) => {
+    const guests = JSON.parse(companions);
+
+    guests.forEach((guest) => {
+      guest.id = id;
+      guest.added = true;
+      guest.isOpen = false;
+    });
+
+    allGuests = [...allGuests, ...guests];
+  });
+
+  invitedPerson.guests = allGuests;
+};
+
+onMounted(async () => {
+  const getAllPastInvitedGuests = await getConfirmations(invitedPerson.uuid);
+  updateInvitedPersonGuests(getAllPastInvitedGuests);
+});
+</script>
+
+<styles lang="postcss" scoped>
 form {
-  @apply flex flex-col items-center w-full max-w-lg mx-auto space-y-4;
+  @apply flex flex-col items-center w-full mx-auto space-y-4;
 
   & div {
     @apply flex flex-col w-full space-y-2 text-sm;
@@ -230,17 +298,8 @@ form {
   }
 }
 
-.accordion {
-  @apply w-full max-w-2xl mx-auto;
-  & > div {
-    @apply mb-4;
-  }
-}
-
-.grid {
-  & > div {
-    @apply flex flex-col items-center justify-center p-4 space-y-4 text-center bg-white rounded-lg shadow-lg;
-  }
+h1 {
+  @apply text-4xl font-bold text-center my-8;
 }
 
 .img {
@@ -251,6 +310,25 @@ form {
 
   & .cls-1 {
     @apply fill-none stroke-primary-200;
+  }
+}
+
+div.accordion {
+  @apply w-full;
+  &&& h2 {
+    @apply m-0 p-0;
+
+    &:last-of-type {
+      @apply mb-4;
+    }
+  }
+}
+
+.restrictions--wrapper {
+  @apply p-0 px-4 text-left;
+
+  &&& .restrictions--description {
+    @apply m-0 py-4 text-gray-500;
   }
 }
 
@@ -276,5 +354,38 @@ button[type="button"] {
       @apply bg-secondary-100 cursor-not-allowed;
     }
   }
+
+  & svg.plus-svg {
+    @apply w-6 h-6 mx-auto;
+
+    & .st0 {
+      @apply fill-white;
+    }
+  }
+
+  &&&.edit-btn,
+  &&&.remove-btn {
+    @apply w-12 h-12 bg-transparent shadow-none hover:opacity-50 m-0 p-0;
+
+    & svg {
+      @apply w-8 h-8 text-secondary-500 mx-auto;
+    }
+  }
 }
-</style>
+
+div.alert {
+  @apply flex flex-row text-left justify-start items-center p-4 mt-0 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50;
+
+  & p.description {
+    @apply m-0;
+
+    & span {
+      @apply block;
+    }
+
+    && strong {
+      @apply text-secondary-600 font-extrabold;
+    }
+  }
+}
+</styles>

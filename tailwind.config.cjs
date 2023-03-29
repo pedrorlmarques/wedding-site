@@ -4,6 +4,7 @@ module.exports = {
   theme: {
     fontFamily: {
       sans: ["PlusJakartaSans", "sans-serif"],
+      bacalisties: ["Bacalisties", "cursive"],
     },
     extend: {
       colors: {

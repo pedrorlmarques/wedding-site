@@ -48,13 +48,13 @@ onMounted(() => {
 
 <style scoped lang="postcss">
 .countdown {
-  @apply flex justify-center items-center space-x-4;
+  @apply grid md:grid-cols-4 grid-cols-2;
 
-  & .block {
-    @apply flex flex-col items-center !mx-8;
+  && .block {
+    @apply flex flex-col items-center mx-8;
 
     & .digit {
-      @apply text-6xl font-bold text-gray-900;
+      @apply text-6xl font-bold text-gray-900 mb-0;
     }
 
     & .text {
