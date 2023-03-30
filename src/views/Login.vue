@@ -2,7 +2,7 @@
   <Layout>
     <div class="card">
       <div class="space prose">
-        <h1 class="hello">Casamento Maria Inês & Pedro</h1>
+        <h1 class="hello text-center">Casamento <br />Maria Inês & Pedro</h1>
         <LoginForm />
       </div>
     </div>

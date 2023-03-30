@@ -1,6 +1,6 @@
 <template>
   <DashboardLayout>
-    <div class="container mx-auto px-16 sm:px-32">
+    <div class="container mx-auto px-2 sm:px-32">
       <Timer class="my-8" />
       <h1 class="wedding-font">Maria Inês e Pedro</h1>
 
@@ -64,6 +64,6 @@ svg > .st0 {
 }
 
 .wedding-font {
-  @apply font-bacalisties text-4xl my-16 md:my-32 md:text-7xl text-secondary-400 px-8 text-center;
+  @apply font-bacalisties text-5xl my-12 md:my-32 md:text-7xl text-secondary-400 text-center;
 }
 </style>

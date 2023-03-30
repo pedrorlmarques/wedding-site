@@ -44,7 +44,7 @@
       />
     </div>
     <div class="flex flex-row items-center justify-between">
-      <div class="flex flex-row items-start">
+      <div class="flex flex-row items-start items-center">
         <div class="flex items-center h-5">
           <input
             id="remember"
@@ -59,7 +59,7 @@
           <label for="remember" class="text-gray-500 mb-0">Lembrar-me</label>
         </div>
       </div>
-      <router-link as="a" to="/forgot-password" class="forgot">
+      <router-link to="/forgot-password" class="forgot">
         Esqueceu-se da password?
       </router-link>
     </div>
@@ -123,4 +123,8 @@ onBeforeMount(() => {
 });
 </script>
 
-<styles lang="postcss" scoped></styles>
+<styles lang="postcss" scoped>
+a.forgot {
+  @apply text-right;
+}
+</styles>

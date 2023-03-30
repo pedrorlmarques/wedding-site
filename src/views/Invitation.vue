@@ -1,6 +1,6 @@
 <template>
   <DashboardLayout>
-    <div class="max-w-5xl w-full flex justify-start">
+    <div class="container mx-auto px-2 sm:px-32 flex justify-start">
       <router-link custom v-slot="{ navigate }" to="/">
         <button
           class="btn"
@@ -94,7 +94,7 @@ main {
   @apply flex flex-col items-center justify-center bg-secondary-50;
 
   && article {
-    @apply prose flex justify-between text-center my-16 px-8 md:px-0 max-w-5xl w-full;
+    @apply prose flex justify-between text-center my-16 px-2 md:px-0 max-w-5xl w-full;
 
     & div.left {
       @apply flex flex-col justify-end w-full md:w-10/12;

@@ -54,11 +54,11 @@ onMounted(() => {
     @apply flex flex-col items-center mx-8;
 
     & .digit {
-      @apply text-6xl font-bold text-gray-900 mb-0;
+      @apply text-4xl sm:text-6xl font-bold text-gray-900 mb-0;
     }
 
     & .text {
-      @apply text-xl text-secondary-500 mt-2 uppercase tracking-widest;
+      @apply text-sm sm:text-xl text-secondary-500 mt-2 uppercase tracking-widest;
     }
   }
 }

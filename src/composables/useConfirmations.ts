@@ -42,7 +42,8 @@ export const useConfirmations = () => {
   ) => {
     try {
       const { status, data } = await apiCallback();
-      if (status === 201 && successMessage) successToast.value(successMessage);
+      if ((status === 200 || status === 204) && successMessage)
+        successToast.value(successMessage);
       if (status === 400 && errorMessage) errorToast.value(errorMessage);
       if (status === 400) throw new Error(errorMessage);
       return data;
@@ -77,8 +78,8 @@ export const useConfirmations = () => {
             user_id: userWithGuests.uuid,
             companions: JSON.stringify(userWithGuests.guests),
           })
-          .eq("id", userWithGuests.uuid),
-      "Os teus convidados já foram removidos da lista de confirmações. Obrigado!",
+          .eq("user_id", userWithGuests.uuid),
+      "A tua lista de convidados foi atualizado com sucesso! Obrigado!",
       "Ocorreu um erro ao remover os convidados da lista de confirmações. Por favor, tenta novamente."
     );
   };

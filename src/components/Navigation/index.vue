@@ -10,7 +10,7 @@
           :aria-expanded="openMenu"
         >
           <span class="sr-only">Open user menu</span>
-          <UserSvg class="w-14 h-14 rounded-full user-icon" alt="user photo" />
+          <UserSvg class="user-icon" alt="user photo" />
           <ArrowSvg class="arrow-icon" :class="openMenu ? 'rotate-180' : ''" />
         </button>
         <!-- Dropdown menu -->
@@ -75,7 +75,7 @@ button[type="button"].btn-menu {
 
   & svg {
     &.user-icon {
-      @apply mr-2;
+      @apply w-10 h-10 rounded-full mr-2;
     }
 
     &.arrow-icon {
