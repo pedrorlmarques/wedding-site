@@ -1,10 +1,10 @@
 <template>
   <DashboardLayout>
-    <div class="container mx-auto px-2 sm:px-32 flex justify-start">
+    <div class="max-w-5xl w-full px-2 sm:px-0 flex justify-start">
       <router-link custom v-slot="{ navigate }" to="/">
         <button
           class="btn"
-          type="submit"
+          type="button"
           @click="navigate"
           @keypress.esc="navigate"
         >

@@ -1,5 +1,14 @@
 <template>
-  <FormKit type="form" :actions="false" #default="{ state: { valid } }">
+  <FormKit
+    type="form"
+    :actions="false"
+    id="invitation-form"
+    #default="{ state }"
+    @submit="handleInvitation"
+    :config="{
+      validationVisibility: 'dirty',
+    }"
+  >
     <div>
       <label for="name"
         >Nome Completo <span class="text-red-500">*</span></label
@@ -62,26 +71,11 @@
               :aria-controls="`accordion-${guestIdx}`"
             >
               <span>{{ guest.name }}</span>
-              <Arrow
-                class="w-6 h-6 shrink-0"
-                :class="guest.isOpen ? ' rotate-180' : ''"
-              />
-            </button>
-          </h2>
-          <div
-            id="accordion-collapse-body-1"
-            :class="guest.isOpen ? '' : 'hidden'"
-            :aria-labelledby="`accordion-${guestIdx}`"
-          >
-            <div class="restrictions--wrapper">
-              <p class="restrictions--description">
-                {{
-                  guest.restrictions
-                    ? `Observações: ${guest.restrictions}`
-                    : "Sem observações"
-                }}
-              </p>
+
               <div class="flex flex-row justify-end">
+                <button type="button" class="arrow-btn">
+                  <Arrow :class="guest.isOpen ? ' rotate-180' : ''" />
+                </button>
                 <button
                   type="button"
                   class="edit-btn"
@@ -97,6 +91,21 @@
                   <DeleteSVG />
                 </button>
               </div>
+            </button>
+          </h2>
+          <div
+            id="accordion-collapse-body-1"
+            :class="guest.isOpen ? '' : 'hidden'"
+            :aria-labelledby="`accordion-${guestIdx}`"
+          >
+            <div class="restrictions--wrapper">
+              <p class="restrictions--description">
+                {{
+                  guest.restrictions
+                    ? `Observações: ${guest.restrictions}`
+                    : "Sem observações"
+                }}
+              </p>
             </div>
           </div>
         </template>
@@ -105,7 +114,7 @@
       <FormKit
         type="group"
         v-for="(guest, idx) in invitedPerson.guests"
-        #default="{ state: { valid } }"
+        #default="{ state: { valid: guestsValid } }"
       >
         <template v-if="!guest.added">
           <FormKit
@@ -126,55 +135,68 @@
             placeholder="Escreve as restricções alimentares ou uma outra observação aqui..."
             v-model="guest.restrictions"
           />
+          <div class="grid grid-cols-2 gap-6">
+            <button
+              type="button"
+              class="cancel-guest-btn"
+              @click="removeGuest(idx)"
+            >
+              <CancelSVG class="cancel-svg" />
+            </button>
+            <button
+              type="button"
+              class="add-guest-btn"
+              @click="addGuestInput(guest)"
+              :disabled="!guestsValid"
+            >
+              <CheckSVG class="check-svg" />
+            </button>
+          </div>
         </template>
-        <button
-          type="button"
-          v-if="!guest.added"
-          class="add-guest-btn"
-          @click="addGuestInput(guest)"
-          :disabled="!valid"
-        >
-          <PlusSVG class="plus-svg" />
-        </button>
       </FormKit>
       <button
         type="button"
-        class="add-guest-btn"
+        class="add-new-guest-btn"
         v-if="!invitedPerson.guests.length || checkIfAllGuestsAreAdded()"
-        @click="() => addNewGuest()"
+        @click="addNewGuest()"
       >
         <PlusSVG class="plus-svg" />
       </button>
     </div>
     <button
-      type="button"
+      type="submit"
       class="send-btn"
-      :disabled="!valid"
-      @click="handleInvitation"
+      :disabled="!(state.valid && state.dirty)"
     >
       Enviar Lista de Convidados
     </button>
+    <pre wrap>{{ state }}</pre>
   </FormKit>
 </template>
 <script setup lang="ts">
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, onBeforeMount } from "vue";
+import { reset } from "@formkit/vue";
+
 import PlusSVG from "@/assets/plus.svg?component";
 import Arrow from "@/assets/arrow-down-up.svg?component";
 import EditPencilSVG from "@/assets/edit-pencil.svg?component";
 import DeleteSVG from "@/assets/delete.svg?component";
+import CheckSVG from "@/assets/check.svg?component";
+import CancelSVG from "@/assets/cancel.svg?component";
+
 import { useAuth } from "@/composables/useAuth";
 import { useConfirmations } from "@/composables/useConfirmations";
-import { useRouter } from "vue-router";
 
-const router = useRouter();
 const { userSession } = useAuth();
-const { addNewGuests, getConfirmations, updateGuests } = useConfirmations();
+const { addNewGuests, getConfirmations, updateGuests, handleGuests } =
+  useConfirmations();
 
 const guestId = ref<string>("");
+
 const invitedPerson = reactive<InvitedPerson>({
   name: userSession.value?.user.user_metadata.full_name || "",
   uuid: userSession.value?.user.id,
-  guests: [],
+  guests: handleGuests.value || [],
 });
 
 const addGuestInput = (guest: Guest) => {
@@ -213,24 +235,17 @@ const handleInvitation = async () => {
     await updateGuests(invitedPerson);
   }
 
-  // router.push("/");
-};
-
-const updateGuestsOnForm = (guests: GuestsFromDB[]) => {
-  const companionFromDB = guests[0]?.companions;
-  invitedPerson.guests = companionFromDB ? JSON.parse(companionFromDB) : [];
+  reset("invitation-form");
 };
 
 onMounted(async () => {
+  let getAllPastInvitedGuests: GuestsFromDB[] | [] = [];
   if (invitedPerson.uuid) {
-    const getAllPastInvitedGuests: GuestsFromDB[] = await getConfirmations(
-      invitedPerson.uuid
-    );
+    getAllPastInvitedGuests = await getConfirmations(invitedPerson.uuid);
 
     if (getAllPastInvitedGuests.length) {
       guestId.value = getAllPastInvitedGuests[0].id;
     }
-
     updateGuestsOnForm(getAllPastInvitedGuests);
   }
 });
@@ -305,14 +320,15 @@ div.accordion {
   }
 }
 
-button[type="button"] {
+button[type="button"],
+button[type="submit"] {
   @apply px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg shadow-md hover:bg-primary-700 m-0;
 
   &[disabled] {
     @apply bg-primary-100 cursor-not-allowed;
   }
 
-  &.add-guest-btn {
+  &.add-new-guest-btn {
     @apply w-full rounded-none shadow-none;
   }
 
@@ -337,11 +353,48 @@ button[type="button"] {
   }
 
   &&&.edit-btn,
-  &&&.remove-btn {
-    @apply w-12 h-12 bg-transparent shadow-none hover:opacity-50 m-0 p-0;
+  &&&.remove-btn,
+  &&&.arrow-btn {
+    @apply w-6 h-6 bg-transparent shadow-none hover:opacity-50 m-0 p-0;
 
     & svg {
-      @apply w-8 h-8 text-secondary-500 mx-auto;
+      @apply w-6 h-6 text-secondary-500 mx-auto;
+
+      & path {
+        @apply stroke-secondary-500;
+      }
+    }
+  }
+
+  &&&.cancel-guest-btn {
+    @apply w-full rounded-none bg-red-600 mt-0 shadow-none;
+
+    &[disabled] {
+      @apply bg-red-200 cursor-not-allowed;
+    }
+
+    & .cancel-svg {
+      @apply w-6 h-6 mx-auto;
+
+      & path {
+        @apply fill-white;
+      }
+    }
+  }
+
+  &&&.add-guest-btn {
+    @apply w-full rounded-none bg-green-600 mt-0 shadow-none;
+
+    &[disabled] {
+      @apply bg-green-200 cursor-not-allowed;
+    }
+
+    & .check-svg {
+      @apply w-6 h-6 mx-auto;
+
+      & path {
+        @apply stroke-white;
+      }
     }
   }
 }

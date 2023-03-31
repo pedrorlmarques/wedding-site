@@ -1,11 +1,10 @@
-import { computed, ref } from "vue";
+import { computed, ref, Ref } from "vue";
 import { useToast, POSITION } from "vue-toastification";
 import { supabase } from "@/composables/useSupabase";
-import { Session, Provider } from "@supabase/gotrue-js/dist/main/lib/types";
-
-const userSession = ref<Session | null>(null);
 
 const toast = useToast();
+
+const handleGuests: Ref<Guest[] | []> = ref([]);
 
 export const useConfirmations = () => {
   /**
@@ -85,16 +84,22 @@ export const useConfirmations = () => {
   };
 
   const getConfirmations = async (userId: string) => {
-    return await handleApiCall(() =>
+    const data = await handleApiCall(() =>
       // @ts-ignore
       supabase.from("confirmations").select("*").eq("user_id", userId)
     );
+
+    handleGuests.value = data[0]?.companions
+      ? JSON.parse(data[0]?.companions)
+      : [];
+
+    return data;
   };
 
   return {
-    userSession,
     addNewGuests,
     updateGuests,
     getConfirmations,
+    handleGuests,
   };
 };
