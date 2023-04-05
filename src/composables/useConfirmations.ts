@@ -4,8 +4,6 @@ import { supabase } from "@/composables/useSupabase";
 
 const toast = useToast();
 
-const handleGuests: Ref<Guest[] | []> = ref([]);
-
 export const useConfirmations = () => {
   /**
    * Success toast
@@ -41,7 +39,10 @@ export const useConfirmations = () => {
   ) => {
     try {
       const { status, data } = await apiCallback();
-      if ((status === 200 || status === 204) && successMessage)
+      if (
+        (status === 200 || status === 204 || status === 201) &&
+        successMessage
+      )
         successToast.value(successMessage);
       if (status === 400 && errorMessage) errorToast.value(errorMessage);
       if (status === 400) throw new Error(errorMessage);
@@ -49,6 +50,14 @@ export const useConfirmations = () => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const updateCompanionsObj = (guests: Guest[]) => {
+    const companions = guests.map((guest) => ({
+      name: guest.name,
+      restrictions: guest.restrictions,
+    }));
+    return companions;
   };
 
   const addNewGuests = async (userWithGuests: InvitedPerson) => {
@@ -59,7 +68,9 @@ export const useConfirmations = () => {
           .from("confirmations")
           .insert({
             user_id: userWithGuests.uuid,
-            companions: JSON.stringify(userWithGuests.guests),
+            companions: JSON.stringify(
+              updateCompanionsObj(userWithGuests.guests)
+            ),
           })
           .single(),
       "Os teus convidados já foram adicionados à lista de confirmações e com as devidas observações. Obrigado!",
@@ -75,7 +86,9 @@ export const useConfirmations = () => {
           .from("confirmations")
           .update({
             user_id: userWithGuests.uuid,
-            companions: JSON.stringify(userWithGuests.guests),
+            companions: JSON.stringify(
+              updateCompanionsObj(userWithGuests.guests)
+            ),
           })
           .eq("user_id", userWithGuests.uuid),
       "A tua lista de convidados foi atualizado com sucesso! Obrigado!",
@@ -83,23 +96,21 @@ export const useConfirmations = () => {
     );
   };
 
-  const getConfirmations = async (userId: string) => {
-    const data = await handleApiCall(() =>
+  const getConfirmations = async (userId?: string): Promise<Guest[] | null> => {
+    if (!userId) return null;
+    const dbCompanions: GuestsFromDB[] = await handleApiCall(() =>
       // @ts-ignore
       supabase.from("confirmations").select("*").eq("user_id", userId)
     );
 
-    handleGuests.value = data[0]?.companions
-      ? JSON.parse(data[0]?.companions)
-      : [];
-
-    return data;
+    return dbCompanions && dbCompanions[0]?.companions
+      ? (JSON.parse(dbCompanions[0].companions) as Guest[])
+      : null;
   };
 
   return {
     addNewGuests,
     updateGuests,
     getConfirmations,
-    handleGuests,
   };
 };

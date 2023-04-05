@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@formkit/core': 0.16.4
   '@formkit/vue': 0.16.4
   '@originjs/vite-plugin-federation': 1.2.1
   '@supabase/gotrue-js': 2.15.0
@@ -25,6 +26,7 @@ specifiers:
   vue-tsc: 1.2.0
 
 dependencies:
+  '@formkit/core': 0.16.4
   '@formkit/vue': 0.16.4_oh3q7ucsj5a74whiinvjry2vwu
   '@supabase/gotrue-js': 2.15.0
   '@supabase/supabase-js': 2.12.0

@@ -1,16 +1,10 @@
 <template>
   <section>
     <div class="wrapper">
-      <div class="prose">
-        <slot></slot>
-      </div>
+      <slot></slot>
     </div>
   </section>
 </template>
-
-<script setup name="Layout">
-import RingsIcon from "@/assets/rings.svg?component";
-</script>
 
 <style lang="postcss">
 body {
@@ -38,7 +32,7 @@ body {
 }
 
 .card {
-  @apply bg-white rounded-lg shadow-lg md:mt-0 sm:max-w-md xl:p-0;
+  @apply bg-white w-full rounded-lg shadow-lg md:mt-0 sm:max-w-md xl:p-0;
 
   & .space {
     @apply p-6 space-y-4 md:space-y-6 sm:p-8;

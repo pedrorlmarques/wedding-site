@@ -12,7 +12,7 @@ const options: PluginOptions = {
 
 const app = createApp(App);
 
-app.use(plugin, defaultConfig);
 app.use(Toast, options);
 app.use(router);
+app.use(plugin, defaultConfig);
 app.mount("#app");

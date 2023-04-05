@@ -29,5 +29,5 @@ declare interface GuestsFromDB {
 declare interface InvitedPerson {
   name: string;
   uuid?: string;
-  guests: Guest[] | [];
+  guests: Guest[];
 }

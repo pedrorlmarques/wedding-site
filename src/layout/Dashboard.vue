@@ -1,7 +1,9 @@
 <template>
   <main>
-    <Navigation />
-    <slot />
+    <section>
+      <Navigation />
+      <slot />
+    </section>
   </main>
 </template>
 
@@ -9,12 +11,12 @@
 import Navigation from "@/components/Navigation/index.vue";
 </script>
 
-<style lang="postcss">
-body {
-  @apply bg-secondary-50;
+<style lang="postcss" scoped>
+main {
+  @apply flex flex-col min-h-screen bg-secondary-50 w-full;
 }
 
-main {
-  @apply flex flex-col min-h-screen mx-auto bg-secondary-50;
+section {
+  @apply max-w-7xl mx-auto relative w-full;
 }
 </style>

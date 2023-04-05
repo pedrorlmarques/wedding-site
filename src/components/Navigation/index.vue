@@ -1,5 +1,5 @@
 <template>
-  <nav class="bg-secondary-50 px-2 sm:px-4 py-2.5 w-full">
+  <nav class="bg-transparent px-2 sm:px-4 py-2.5 w-full">
     <div class="container flex flex-wrap items-center justify-end mx-auto">
       <div class="flex items-center md:order-2 relative">
         <button
@@ -16,16 +16,19 @@
         <!-- Dropdown menu -->
         <div
           v-if="openMenu"
-          class="absolute top-16 right-0 z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow"
+          class="absolute top-8 right-0 z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow"
           ref="menu"
           id="user-dropdown"
         >
           <div class="px-4 py-3">
-            <span class="block text-sm text-gray-900">{{ user?.name }}</span>
-
-            <span class="block text-sm font-medium text-gray-500 truncate">{{
-              user?.email
+            <span class="block text-sm text-gray-900 whitespace-nowrap">{{
+              user?.name || user?.user_metadata.name
             }}</span>
+
+            <span
+              class="block text-sm font-medium text-gray-500 truncate whitespace-nowrap"
+              >{{ user?.email }}</span
+            >
           </div>
           <ul class="py-2">
             <li>
@@ -42,7 +45,7 @@
     </div>
   </nav>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue";
 import { onClickOutside } from "@vueuse/core";
 import UserSvg from "@assets/user.svg?component";
@@ -54,7 +57,7 @@ const menu = ref(null);
 const router = useRouter();
 const { userSession, handleLogout } = useAuth();
 
-const user = computed(() => userSession.value?.user.user_metadata);
+const user = computed(() => userSession.value?.user);
 
 onClickOutside(menu, () => (openMenu.value = false));
 

@@ -11,6 +11,7 @@
     "stop": "kill-port --port 3001"
   },
   "dependencies": {
+    "@formkit/core": "0.16.4",
     "@formkit/vue": "0.16.4",
     "@supabase/gotrue-js": "2.15.0",
     "@supabase/supabase-js": "2.12.0",

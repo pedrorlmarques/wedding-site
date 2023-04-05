@@ -1,9 +1,11 @@
 <template>
-  <DashboardLayout>
+  <HomeLayout>
     <div class="container mx-auto px-2 sm:px-32">
-      <Timer class="my-8" />
-      <h1 class="wedding-font">Maria Inês e Pedro</h1>
-
+      <div class="hr-heart">
+        <span class="first-line"></span>
+        <HeartSvg />
+        <span class="second-line"></span>
+      </div>
       <div
         class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mx-8 sm:mx-0"
       >
@@ -45,14 +47,15 @@
         </AnchorToPagesButton>
       </div>
     </div>
-  </DashboardLayout>
+  </HomeLayout>
 </template>
 
 <script setup>
-import DashboardLayout from "@/layout/Dashboard.vue";
-import Timer from "@components/Timer/index.vue";
+import HomeLayout from "@/layout/HomeLayout.vue";
 import AnchorToPagesButton from "@components/AnchorToPagesButton/index.vue";
 import WeddingInvitationSvg from "@/assets/wedding-invitation.svg?component";
+
+import HeartSvg from "@/assets/heart.svg?component";
 import CameraSvg from "@/assets/camera.svg?component";
 import DiscoBallSvg from "@/assets/disco-ball.svg?component";
 import ForkAndSpoonSvg from "@/assets/fork-and-spoon.svg?component";
@@ -63,7 +66,21 @@ svg > .st0 {
   @apply fill-current text-secondary-500;
 }
 
-.wedding-font {
-  @apply font-bacalisties text-5xl my-12 md:my-32 md:text-7xl text-secondary-400 text-center;
+div.hr-heart {
+  @apply relative clear-both my-4 block h-auto overflow-hidden whitespace-nowrap w-full text-center;
+
+  & span.first-line,
+  & span.second-line {
+    @apply relative inline-block align-middle mx-2 w-full max-w-[20vw] h-[1px] left-0 top-1/2 -mt-[1px] border-t-[1px] border-secondary-200;
+  }
+  & span.first-line {
+  }
+
+  & svg {
+    @apply inline-block align-middle w-4 h-4 stroke-primary-400 stroke-[3px];
+  }
+
+  & span.second-line {
+  }
 }
 </style>

@@ -3,11 +3,11 @@
     type="form"
     :actions="false"
     id="invitation-form"
+    ref="invitationForm"
+    :value="invitedPerson"
     #default="{ state }"
     @submit="handleInvitation"
-    :config="{
-      validationVisibility: 'dirty',
-    }"
+    v-if="!isLoading"
   >
     <div>
       <label for="name"
@@ -15,7 +15,7 @@
       >
       <FormKit
         type="text"
-        id="name"
+        name="name"
         placeholder="O seu nome"
         validation="required"
         :validation-messages="{
@@ -53,7 +53,6 @@
           <strong>restrições alimentares</strong> ou outras observações.
         </p>
       </div>
-
       <div
         class="accordion"
         id="accordion-collapse"
@@ -65,12 +64,12 @@
             <button
               type="button"
               class="accordion-btn"
-              @click="toggleAccordion(guest)"
+              @click.prevent="toggleAccordion(guest)"
               :data-accordion-target="`#accordion-${guestIdx}`"
               aria-expanded="true"
               :aria-controls="`accordion-${guestIdx}`"
             >
-              <span>{{ guest.name }}</span>
+              <span class="whitespace-nowrap">{{ guest.name }}</span>
 
               <div class="flex flex-row justify-end">
                 <button type="button" class="arrow-btn">
@@ -79,14 +78,14 @@
                 <button
                   type="button"
                   class="edit-btn"
-                  @click="editedGuest(guest)"
+                  @click.prevent="editedGuest(guestIdx)"
                 >
                   <EditPencilSVG />
                 </button>
                 <button
                   type="button"
                   class="remove-btn"
-                  @click="removeGuest(guestIdx)"
+                  @click.prevent="removeGuest(guestIdx)"
                 >
                   <DeleteSVG />
                 </button>
@@ -113,6 +112,8 @@
 
       <FormKit
         type="group"
+        id="guestForm"
+        :value="guest"
         v-for="(guest, idx) in invitedPerson.guests"
         #default="{ state: { valid: guestsValid } }"
       >
@@ -146,7 +147,7 @@
             <button
               type="button"
               class="add-guest-btn"
-              @click="addGuestInput(guest)"
+              @click="acceptGuest(idx)"
               :disabled="!guestsValid"
             >
               <CheckSVG class="check-svg" />
@@ -170,12 +171,12 @@
     >
       Enviar Lista de Convidados
     </button>
-    <pre wrap>{{ state }}</pre>
   </FormKit>
 </template>
+
 <script setup lang="ts">
-import { ref, reactive, onMounted, onBeforeMount } from "vue";
-import { reset } from "@formkit/vue";
+import { ref, onMounted } from "vue";
+import { reset, FormKitNode } from "@formkit/core";
 
 import PlusSVG from "@/assets/plus.svg?component";
 import Arrow from "@/assets/arrow-down-up.svg?component";
@@ -187,38 +188,43 @@ import CancelSVG from "@/assets/cancel.svg?component";
 import { useAuth } from "@/composables/useAuth";
 import { useConfirmations } from "@/composables/useConfirmations";
 
+const isLoading = ref(true);
+const newPerson = ref(true);
+const invitationForm = ref<FormKitNode | null>(null);
+const guestForm = ref<FormKitNode | null>(null);
 const { userSession } = useAuth();
-const { addNewGuests, getConfirmations, updateGuests, handleGuests } =
-  useConfirmations();
+const { addNewGuests, updateGuests, getConfirmations } = useConfirmations();
 
-const guestId = ref<string>("");
-
-const invitedPerson = reactive<InvitedPerson>({
-  name: userSession.value?.user.user_metadata.full_name || "",
+const invitedPerson = ref<InvitedPerson>({
+  name:
+    userSession.value?.user.user_metadata.name ||
+    userSession.value?.user.user_metadata.full_name ||
+    "",
   uuid: userSession.value?.user.id,
-  guests: handleGuests.value || [],
+  guests: [],
 });
 
-const addGuestInput = (guest: Guest) => {
-  guest.added = true;
-};
-
 const addNewGuest = () => {
-  const newGuest: Guest = {
+  invitedPerson.value.guests.push({
     name: "",
     restrictions: "",
     added: false,
     isOpen: false,
-  };
-  invitedPerson.guests = [...invitedPerson.guests, newGuest];
+  });
+  reset("guestForm");
 };
 
-const editedGuest = (guest: Guest) => {
-  guest.added = false;
+const acceptGuest = (guestIndex: number) => {
+  invitedPerson.value.guests[guestIndex].added = true;
+  invitedPerson.value.guests[guestIndex].isOpen = false;
 };
 
-const removeGuest = (guestIndex: Number) => {
-  invitedPerson.guests.splice(Number(guestIndex), 1);
+const editedGuest = (guestIndex: number) => {
+  invitedPerson.value.guests[guestIndex].added = false;
+};
+
+const removeGuest = (guestIndex: number) => {
+  invitedPerson.value.guests.splice(guestIndex, 1);
 };
 
 const toggleAccordion = (guest: Guest) => {
@@ -226,28 +232,35 @@ const toggleAccordion = (guest: Guest) => {
 };
 
 const checkIfAllGuestsAreAdded = () =>
-  invitedPerson.guests?.every((guest) => guest.added);
+  invitedPerson.value.guests?.every((guest) => guest.added);
 
 const handleInvitation = async () => {
-  if (!guestId.value) {
-    await addNewGuests(invitedPerson);
+  if (newPerson.value) {
+    await addNewGuests(invitedPerson.value);
+    newPerson.value = false;
   } else {
-    await updateGuests(invitedPerson);
+    await updateGuests(invitedPerson.value);
   }
 
-  reset("invitation-form");
+  reset((invitationForm.value as any).node, invitedPerson.value);
 };
 
 onMounted(async () => {
-  let getAllPastInvitedGuests: GuestsFromDB[] | [] = [];
-  if (invitedPerson.uuid) {
-    getAllPastInvitedGuests = await getConfirmations(invitedPerson.uuid);
-
-    if (getAllPastInvitedGuests.length) {
-      guestId.value = getAllPastInvitedGuests[0].id;
-    }
-    updateGuestsOnForm(getAllPastInvitedGuests);
+  const result = await getConfirmations(userSession.value?.user.id);
+  if (result != null) {
+    const newGuests = result.map((guest) => ({
+      ...guest,
+      added: true,
+      isOpen: false,
+    }));
+    invitedPerson.value.guests = newGuests;
+    newPerson.value = false;
+  } else {
+    newPerson.value = true;
   }
+  isLoading.value = false;
+  if (invitationForm.value != null)
+    reset((invitationForm.value as any).node, invitedPerson.value);
 });
 </script>
 
@@ -316,7 +329,7 @@ div.accordion {
   @apply p-0 px-4 text-left;
 
   &&& .restrictions--description {
-    @apply m-0 py-4 text-gray-500;
+    @apply m-0 pb-4 text-gray-500;
   }
 }
 
@@ -329,7 +342,14 @@ button[type="submit"] {
   }
 
   &.add-new-guest-btn {
-    @apply w-full rounded-none shadow-none;
+    @apply w-full rounded-none shadow-none bg-transparent;
+
+    &:hover {
+      @apply bg-primary-600;
+      & .st0 {
+        @apply fill-white;
+      }
+    }
   }
 
   &.accordion-btn {
@@ -348,14 +368,14 @@ button[type="submit"] {
     @apply w-6 h-6 mx-auto;
 
     & .st0 {
-      @apply fill-white;
+      @apply fill-black;
     }
   }
 
   &&&.edit-btn,
   &&&.remove-btn,
   &&&.arrow-btn {
-    @apply w-6 h-6 bg-transparent shadow-none hover:opacity-50 m-0 p-0;
+    @apply w-6 h-6 bg-transparent shadow-none hover:opacity-50 mx-1 my-0 p-0;
 
     & svg {
       @apply w-6 h-6 text-secondary-500 mx-auto;
@@ -363,6 +383,25 @@ button[type="submit"] {
       & path {
         @apply stroke-secondary-500;
       }
+    }
+
+    &:last-of-type {
+      @apply mr-0;
+    }
+  }
+
+  &&&&.edit-btn {
+    & svg {
+      @apply fill-secondary-500;
+    }
+    & path {
+      @apply stroke-none;
+    }
+  }
+
+  &&&&.remove-btn {
+    & svg {
+      @apply h-5 w-5;
     }
   }
 
