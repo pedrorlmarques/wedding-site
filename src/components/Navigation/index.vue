@@ -22,7 +22,7 @@
         >
           <div class="px-4 py-3">
             <span class="block text-sm text-gray-900 whitespace-nowrap">{{
-              user?.name || user?.user_metadata.name
+              user?.user_metadata.name || user?.user_metadata.full_name
             }}</span>
 
             <span

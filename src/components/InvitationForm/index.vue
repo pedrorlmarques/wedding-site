@@ -78,14 +78,14 @@
                 <button
                   type="button"
                   class="edit-btn"
-                  @click.prevent="editedGuest(guestIdx)"
+                  @click.prevent="editedGuest(guest)"
                 >
                   <EditPencilSVG />
                 </button>
                 <button
                   type="button"
                   class="remove-btn"
-                  @click.prevent="removeGuest(guestIdx)"
+                  @click.prevent="removeGuest(guest)"
                 >
                   <DeleteSVG />
                 </button>
