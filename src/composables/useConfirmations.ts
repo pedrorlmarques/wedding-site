@@ -60,14 +60,14 @@ export const useConfirmations = () => {
     return companions;
   };
 
-  const addNewGuests = async (userWithGuests: InvitedPerson) => {
+  const addNewGuests = async (userWithGuests: InvitedPerson, uid: string) => {
     return await handleApiCall(
       () =>
         // @ts-ignore
         supabase
           .from("confirmations")
           .insert({
-            user_id: userWithGuests.uuid,
+            user_id: uid,
             companions: JSON.stringify(
               updateCompanionsObj(userWithGuests.guests)
             ),
@@ -78,19 +78,19 @@ export const useConfirmations = () => {
     );
   };
 
-  const updateGuests = async (userWithGuests: InvitedPerson) => {
+  const updateGuests = async (userWithGuests: InvitedPerson, uid: string) => {
     return await handleApiCall(
       () =>
         // @ts-ignore
         supabase
           .from("confirmations")
           .update({
-            user_id: userWithGuests.uuid,
+            user_id: uid,
             companions: JSON.stringify(
               updateCompanionsObj(userWithGuests.guests)
             ),
           })
-          .eq("user_id", userWithGuests.uuid),
+          .eq("user_id", uid),
       "A tua lista de convidados foi atualizado com sucesso! Obrigado!",
       "Ocorreu um erro ao remover os convidados da lista de confirmações. Por favor, tenta novamente."
     );

@@ -1,26 +1,12 @@
 <template>
-  <FormKit
-    type="form"
-    :actions="false"
-    id="invitation-form"
-    ref="invitationForm"
-    :value="invitedPerson"
-    #default="{ state }"
-    @submit="handleInvitation"
-    v-if="!isLoading"
-  >
+  <form @submit.prevent="handleInvitation" v-if="!isLoading">
     <div>
       <label for="name"
-        >Nome Completo <span class="text-red-500">*</span></label
+        >Nome Completo <span class="text-red-600">*</span></label
       >
-      <FormKit
+      <input
         type="text"
-        name="name"
         placeholder="O seu nome"
-        validation="required"
-        :validation-messages="{
-          required: 'Por favor insira o seu nome',
-        }"
         v-model="invitedPerson.name"
       />
     </div>
@@ -108,31 +94,16 @@
             </div>
           </div>
         </template>
-      </div>
-
-      <FormKit
-        type="group"
-        id="guestForm"
-        :value="guest"
-        v-for="(guest, idx) in invitedPerson.guests"
-        #default="{ state: { valid: guestsValid } }"
-      >
-        <template v-if="!guest.added">
-          <FormKit
-            :key="idx"
+        <template v-else>
+          <input
             type="text"
-            name="guest-name"
+            name="name"
             placeholder="Nome do Convidado"
             v-model="guest.name"
-            validation="required"
-            :validation-messages="{
-              required: 'Por favor insira o nome do convidado',
-            }"
           />
-          <FormKit
-            :key="idx"
+          <input
             type="textarea"
-            name="guest-restrictions"
+            name="restrictions"
             placeholder="Escreve as restricções alimentares ou uma outra observação aqui..."
             v-model="guest.restrictions"
           />
@@ -148,13 +119,13 @@
               type="button"
               class="add-guest-btn"
               @click="acceptGuest(guest)"
-              :disabled="!guestsValid"
             >
               <CheckSVG class="check-svg" />
             </button>
           </div>
         </template>
-      </FormKit>
+      </div>
+      <template></template>
       <button
         type="button"
         class="add-new-guest-btn"
@@ -163,20 +134,18 @@
       >
         <PlusSVG class="plus-svg" />
       </button>
+      <template> </template>
     </div>
-    <button
-      type="submit"
-      class="send-btn"
-      :disabled="!(state.valid && state.dirty)"
-    >
+    <button type="submit" class="send-btn" :disabled="!FormMeta.dirty">
       Enviar Lista de Convidados
     </button>
-  </FormKit>
+  </form>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
-import { reset, FormKitNode } from "@formkit/core";
+import * as yup from "yup";
+import { useForm } from "vee-validate";
 
 import PlusSVG from "@/assets/plus.svg?component";
 import Arrow from "@/assets/arrow-down-up.svg?component";
@@ -190,7 +159,6 @@ import { useConfirmations } from "@/composables/useConfirmations";
 
 const isLoading = ref(true);
 const newPerson = ref(true);
-const invitationForm = ref<FormKitNode | null>(null);
 
 const { userSession } = useAuth();
 const { addNewGuests, updateGuests, getConfirmations } = useConfirmations();
@@ -200,8 +168,30 @@ const invitedPerson = ref<InvitedPerson>({
     userSession.value?.user.user_metadata.name ||
     userSession.value?.user.user_metadata.full_name ||
     "",
-  uuid: userSession.value?.user.id,
   guests: [],
+});
+
+// Form
+const schema = {
+  name: yup.string().required("O nome é obrigatório"),
+  guest: yup.array().of(
+    yup.object().shape({
+      name: yup.string().required("O nome é obrigatório"),
+      restrictions: yup.string(),
+    })
+  ),
+};
+
+const {
+  handleSubmit,
+  isSubmitting,
+  resetForm,
+  meta: FormMeta,
+  setFieldValue,
+} = useForm<InvitedPerson>({
+  initialValues: invitedPerson.value,
+  validateOnMount: true,
+  validationSchema: schema,
 });
 
 const addNewGuest = () => {
@@ -216,6 +206,7 @@ const addNewGuest = () => {
 const acceptGuest = (guest: Guest) => {
   guest.added = true;
   guest.isOpen = false;
+  setFieldValue("guests", invitedPerson.value.guests);
 };
 
 const editedGuest = (guest: Guest) => {
@@ -227,6 +218,7 @@ const removeGuest = (guest: Guest) => {
     invitedPerson.value.guests.indexOf(guest),
     1
   );
+  setFieldValue("guests", invitedPerson.value.guests);
 };
 
 const toggleAccordion = (guest: Guest) => {
@@ -236,16 +228,17 @@ const toggleAccordion = (guest: Guest) => {
 const checkIfAllGuestsAreAdded = () =>
   invitedPerson.value.guests?.every((guest) => guest.added);
 
-const handleInvitation = async () => {
+const handleInvitation = handleSubmit(async (values) => {
+  if (!userSession.value?.user.id) return;
   if (newPerson.value) {
-    await addNewGuests(invitedPerson.value);
+    await addNewGuests(invitedPerson.value, userSession.value?.user.id);
     newPerson.value = false;
   } else {
-    await updateGuests(invitedPerson.value);
+    await updateGuests(invitedPerson.value, userSession.value?.user.id);
   }
 
-  reset((invitationForm.value as any).node, invitedPerson.value);
-};
+  resetForm({ values: invitedPerson.value });
+});
 
 onMounted(async () => {
   const result = await getConfirmations(userSession.value?.user.id);
@@ -261,8 +254,7 @@ onMounted(async () => {
     newPerson.value = true;
   }
   isLoading.value = false;
-  if (invitationForm.value != null)
-    reset((invitationForm.value as any).node, invitedPerson.value);
+  resetForm({ values: invitedPerson.value });
 });
 </script>
 

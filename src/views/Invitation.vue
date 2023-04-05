@@ -29,15 +29,20 @@
               height="24"
               style="stroke-width: 1.5px; fill: none; stroke: black"
             />
-            <span class="ml-4"
-              >Igreja de Santa Maria, R. Nossa Sra. do Castelo. 11,
-              Sesimbra</span
+            <a href="https://goo.gl/maps/opBnV4KxckzcAUxF7" class="ml-4"
+              >Igreja de Santa Maria, R. Nossa Sra. do Castelo. 11, Sesimbra</a
+            >
+          </li>
+          <li class="flex !p-0 items-center text-left">
+            <RestaurantIcon width="24" height="24" />
+            <a href="https://goo.gl/maps/n8kkhyyaFDGR7osJA" class="ml-4"
+              >Estrada do Vale dos Barris, 2950-055 Palmela</a
             >
           </li>
         </ul>
       </div>
       <div>
-        <p class="text-center md:text-left">
+        <p class="text-center md:text-left !mt-0">
           Por favor insere aqui abaixo o teu nome, e os teus convidados com
           todas as observações de cada um que queiras fazer. Avisa-nos de todas
           as restrições alimentares que tenham. <br />
@@ -56,14 +61,15 @@ import InvitationForm from "@components/InvitationForm/index.vue";
 
 import ClockIcon from "@/assets/clock.svg?component";
 import ChurchIcon from "@/assets/church.svg?component";
+import RestaurantIcon from "@/assets/restaurant.svg?component";
 </script>
 
 <style lang="postcss" scoped>
 && article {
-  @apply prose grid grid-cols-1 md:grid-cols-2 gap-4 text-center my-16 !px-2 md:px-0 !max-w-7xl items-center;
+  @apply prose grid grid-cols-1 md:grid-cols-2 gap-4 text-center my-16 !px-2 md:px-0 !max-w-7xl items-start;
 
   & img {
-    @apply w-full max-w-lg mx-auto h-auto mb-8;
+    @apply w-full max-w-lg mx-auto md:mr-auto h-auto mb-8;
   }
 
   & h1 {

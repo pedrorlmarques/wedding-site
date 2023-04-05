@@ -10,9 +10,21 @@
           :aria-expanded="openMenu"
         >
           <span class="sr-only">Open user menu</span>
-          <UserSvg class="user-icon" alt="user photo" />
+          <UserSvg
+            v-if="!user?.user_metadata.avatar_url"
+            class="user-icon"
+            alt="user photo"
+          />
+          <img
+            v-else
+            :src="user?.user_metadata.avatar_url"
+            class="user-icon"
+            alt="user photo"
+          />
+
           <ArrowSvg class="arrow-icon" :class="openMenu ? 'rotate-180' : ''" />
         </button>
+
         <!-- Dropdown menu -->
         <div
           v-if="openMenu"
@@ -76,7 +88,8 @@ const openMenu = ref(false);
 button[type="button"].btn-menu {
   @apply flex items-center text-sm bg-transparent rounded-full md:mr-0 shadow-none p-0.5 hover:opacity-50 hover:bg-transparent;
 
-  & svg {
+  & svg,
+  & img {
     &.user-icon {
       @apply w-10 h-10 rounded-full mr-2;
     }
