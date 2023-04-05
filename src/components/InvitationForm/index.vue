@@ -101,8 +101,8 @@
             placeholder="Nome do Convidado"
             v-model="guest.name"
           />
-          <input
-            type="textarea"
+          <textarea
+            type="text"
             name="restrictions"
             placeholder="Escreve as restricções alimentares ou uma outra observação aqui..."
             v-model="guest.restrictions"
@@ -119,6 +119,7 @@
               type="button"
               class="add-guest-btn"
               @click="acceptGuest(guest)"
+              :disabled="!guest.name"
             >
               <CheckSVG class="check-svg" />
             </button>
@@ -184,7 +185,6 @@ const schema = {
 
 const {
   handleSubmit,
-  isSubmitting,
   resetForm,
   meta: FormMeta,
   setFieldValue,
@@ -337,13 +337,6 @@ button[type="submit"] {
 
   &.add-new-guest-btn {
     @apply w-full rounded-none shadow-none bg-transparent;
-
-    &:hover {
-      @apply bg-primary-600;
-      & .st0 {
-        @apply fill-white;
-      }
-    }
   }
 
   &.accordion-btn {
@@ -416,10 +409,10 @@ button[type="submit"] {
   }
 
   &&&.add-guest-btn {
-    @apply w-full rounded-none bg-green-600 mt-0 shadow-none;
+    @apply w-full rounded-none bg-primary-600 mt-0 shadow-none;
 
     &[disabled] {
-      @apply bg-green-200 cursor-not-allowed;
+      @apply bg-primary-200 cursor-not-allowed;
     }
 
     & .check-svg {
