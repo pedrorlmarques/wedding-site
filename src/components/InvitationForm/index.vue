@@ -140,14 +140,14 @@
             <button
               type="button"
               class="cancel-guest-btn"
-              @click="removeGuest(idx)"
+              @click="removeGuest(guest)"
             >
               <CancelSVG class="cancel-svg" />
             </button>
             <button
               type="button"
               class="add-guest-btn"
-              @click="acceptGuest(idx)"
+              @click="acceptGuest(guest)"
               :disabled="!guestsValid"
             >
               <CheckSVG class="check-svg" />
@@ -175,7 +175,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { reset, FormKitNode } from "@formkit/core";
 
 import PlusSVG from "@/assets/plus.svg?component";
@@ -191,7 +191,7 @@ import { useConfirmations } from "@/composables/useConfirmations";
 const isLoading = ref(true);
 const newPerson = ref(true);
 const invitationForm = ref<FormKitNode | null>(null);
-const guestForm = ref<FormKitNode | null>(null);
+
 const { userSession } = useAuth();
 const { addNewGuests, updateGuests, getConfirmations } = useConfirmations();
 
@@ -211,20 +211,22 @@ const addNewGuest = () => {
     added: false,
     isOpen: false,
   });
-  reset("guestForm");
 };
 
-const acceptGuest = (guestIndex: number) => {
-  invitedPerson.value.guests[guestIndex].added = true;
-  invitedPerson.value.guests[guestIndex].isOpen = false;
+const acceptGuest = (guest: Guest) => {
+  guest.added = true;
+  guest.isOpen = false;
 };
 
-const editedGuest = (guestIndex: number) => {
-  invitedPerson.value.guests[guestIndex].added = false;
+const editedGuest = (guest: Guest) => {
+  guest.added = false;
 };
 
-const removeGuest = (guestIndex: number) => {
-  invitedPerson.value.guests.splice(guestIndex, 1);
+const removeGuest = (guest: Guest) => {
+  invitedPerson.value.guests.splice(
+    invitedPerson.value.guests.indexOf(guest),
+    1
+  );
 };
 
 const toggleAccordion = (guest: Guest) => {
