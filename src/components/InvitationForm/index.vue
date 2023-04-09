@@ -98,10 +98,7 @@ const { addNewGuests, updateGuests, getConfirmations } = useConfirmations();
 
 const invitedPerson = ref<InvitedPerson>({
   user: {
-    name:
-      userSession.value?.user.user_metadata.name ||
-      userSession.value?.user.user_metadata.full_name ||
-      "",
+    name: "",
     restrictions: "",
     isOpen: false,
     added: true,
@@ -210,9 +207,13 @@ onMounted(async () => {
     newPerson.value = false;
   } else {
     newPerson.value = true;
+    invitedPerson.value.user.name =
+      userSession.value?.user.user_metadata.name ||
+      userSession.value?.user.user_metadata.full_name ||
+      "";
+    setFieldValue("user", invitedPerson.value.user);
   }
   isLoading.value = false;
-  resetForm({ values: invitedPerson.value });
 });
 </script>
 

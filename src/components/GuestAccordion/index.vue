@@ -61,7 +61,7 @@ import Arrow from "@/assets/arrow-down-up.svg?component";
 import EditPencilSVG from "@/assets/edit-pencil.svg?component";
 import DeleteSVG from "@/assets/delete.svg?component";
 
-const props = defineProps<{
+defineProps<{
   index: number;
   guest: Guest;
   toggleAccordion?: (guest: Guest) => void;

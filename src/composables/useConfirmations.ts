@@ -108,16 +108,18 @@ export const useConfirmations = () => {
       supabase.from("confirmations").select("*").eq("user_id", userId)
     );
 
-    return {
-      guests:
-        dbGuests[0] && dbGuests[0]?.companions
-          ? JSON.parse(dbGuests[0].companions)
-          : [],
-      user:
-        dbGuests[0] && dbGuests[0]?.user_restrictions
-          ? { restrictions: dbGuests[0].user_restrictions }
-          : null,
-    };
+    return dbGuests && dbGuests[0]
+      ? {
+          guests:
+            dbGuests[0] && dbGuests[0]?.companions
+              ? JSON.parse(dbGuests[0].companions)
+              : [],
+          user:
+            dbGuests[0] && dbGuests[0]?.user_restrictions
+              ? { restrictions: dbGuests[0].user_restrictions }
+              : null,
+        }
+      : null;
   };
 
   return {
