@@ -162,7 +162,10 @@ const cancelGuest = (guest: Guest) => {
 };
 
 const removeGuest = (guest: Guest) => {
-  invitedPerson.value.guests.splice(invitedPerson.value.guests.indexOf(guest));
+  invitedPerson.value.guests.splice(
+    invitedPerson.value.guests.indexOf(guest),
+    1
+  );
   setFieldValue("guests", invitedPerson.value.guests);
 };
 
