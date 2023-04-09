@@ -1,6 +1,8 @@
 <template>
-  <nav class="bg-transparent px-2 sm:px-4 py-2.5 w-full">
-    <div class="container flex flex-wrap items-center justify-end mx-auto">
+  <nav class="bg-transparent px-2 sm:px-4 py-2.5 w-full" ref="nav">
+    <div
+      class="container flex flex-wrap md:flex-nowrap items-center justify-end mx-auto"
+    >
       <div class="flex items-center md:order-2 relative">
         <button
           type="button"
@@ -53,36 +55,134 @@
             </li>
           </ul>
         </div>
+        <button
+          v-if="withNavigation"
+          type="button"
+          class="btn-menu"
+          :aria-expanded="openMainMenu"
+          @click="toggleMainMenu()"
+        >
+          <MenuSvg class="block w-6 h-6 md:!hidden" />
+        </button>
+      </div>
+      <div
+        v-if="withNavigation && (openMainMenu || isDesktop)"
+        class="items-center justify-between w-full md:flex md:order-1"
+        ref="mainMenu"
+      >
+        <ul
+          class="flex flex-col font-medium p-4 md:p-0 mt-4 rounded-lg md:flex-row md:space-x-8 md:mt-0"
+        >
+          <li
+            class="relative nav-link"
+            v-for="(page, pageIndex) in dashboardLinks"
+            :disabled="page.disabled"
+          >
+            <router-link
+              custom
+              :to="page.link"
+              v-slot="{ href, isActive, isExactActive }"
+              ><a
+                :href="href"
+                class="relative flex items-center justify-between py-2 pl-3 pr-4 stroke-black rounded hover:bg-primary-200 md:hover:bg-transparent md:hover:text-primary-600 md:p-0"
+                :class="{
+                  'bg-primary-200 md:bg-transparent md:text-primary-600':
+                    isActive,
+                  'md:bg-transparent md:text-primary-600': isExactActive,
+                  'opacity-40 text-gray-400 hover:cursor-not-allowed pointer-events-none':
+                    page.disabled,
+                }"
+                :disabled="page.disabled"
+              >
+                {{ page.label }}
+                <HeartSvg
+                  :class="{
+                    'md:bg-transparent md:stroke-primary-600':
+                      isActive || isExactActive,
+                    'opacity-40 text-gray-400 hover:cursor-not-allowed pointer-events-none':
+                      page.disabled,
+                  }"
+                />
+              </a>
+            </router-link>
+          </li>
+        </ul>
       </div>
     </div>
   </nav>
 </template>
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { onClickOutside } from "@vueuse/core";
+import { onClickOutside, useWindowSize } from "@vueuse/core";
+
+import HeartSvg from "@assets/heart.svg?component";
+import MenuSvg from "@assets/menu.svg?component";
 import UserSvg from "@assets/user.svg?component";
 import ArrowSvg from "@assets/arrow-down-up.svg?component";
+
 import { useAuth } from "@/composables/useAuth";
 import { useRouter } from "vue-router";
 
+defineProps({
+  withNavigation: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+const { width: windowWidth } = useWindowSize();
+
+const nav = ref(null);
 const menu = ref(null);
+const openMenu = ref(false);
+const mainMenu = ref(null);
+const openMainMenu = ref(false);
+
 const router = useRouter();
 const { userSession, handleLogout } = useAuth();
 
 const user = computed(() => userSession.value?.user);
+const isDesktop = computed(() => windowWidth.value >= 768);
+
+const dashboardLinks = ref([
+  {
+    link: "/",
+    label: "Home",
+    disabled: false,
+  },
+  {
+    link: "/convite",
+    label: "Convite",
+    disabled: false,
+  },
+  {
+    link: "/fotografias",
+    label: "Fotografias",
+    disabled: true,
+  },
+  {
+    link: "/menu",
+    label: "Menu",
+    disabled: true,
+  },
+  {
+    link: "/playlist",
+    label: "Playlist",
+    disabled: true,
+  },
+]);
 
 onClickOutside(menu, () => (openMenu.value = false));
+onClickOutside(mainMenu, () => isDesktop.value && (openMainMenu.value = false));
 
-const toggleMenu = () => {
-  openMenu.value = true;
-};
+const toggleMenu = () => (openMenu.value = !openMenu.value);
+
+const toggleMainMenu = () => (openMainMenu.value = !openMainMenu.value);
 
 const logout = async () => {
   await handleLogout();
   router.push({ name: "Login" });
 };
-
-const openMenu = ref(false);
 </script>
 <style lang="postcss" scoped>
 button[type="button"].btn-menu {
@@ -96,6 +196,18 @@ button[type="button"].btn-menu {
 
     &.arrow-icon {
       @apply w-8 h-8 text-black;
+    }
+  }
+}
+
+.nav-link {
+  & svg {
+    @apply ml-2 w-4 h-4 stroke-[3px];
+  }
+
+  &[disabled="true"] {
+    & svg {
+      @apply text-gray-400 stroke-gray-400;
     }
   }
 }

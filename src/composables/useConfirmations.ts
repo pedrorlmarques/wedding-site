@@ -52,13 +52,11 @@ export const useConfirmations = () => {
     }
   };
 
-  const updateCompanionsObj = (guests: Guest[]) => {
-    const companions = guests.map((guest) => ({
+  const updateCompanionsObj = (guests: Guest[]) =>
+    guests.map((guest) => ({
       name: guest.name,
       restrictions: guest.restrictions,
     }));
-    return companions;
-  };
 
   const addNewGuests = async (userWithGuests: InvitedPerson, uid: string) => {
     return await handleApiCall(
@@ -71,6 +69,7 @@ export const useConfirmations = () => {
             companions: JSON.stringify(
               updateCompanionsObj(userWithGuests.guests)
             ),
+            user_restrictions: userWithGuests.user.restrictions,
           })
           .single(),
       "Os teus convidados já foram adicionados à lista de confirmações e com as devidas observações. Obrigado!",
@@ -89,6 +88,7 @@ export const useConfirmations = () => {
             companions: JSON.stringify(
               updateCompanionsObj(userWithGuests.guests)
             ),
+            user_restrictions: userWithGuests.user.restrictions,
           })
           .eq("user_id", uid),
       "A tua lista de convidados foi atualizado com sucesso! Obrigado!",
@@ -96,16 +96,24 @@ export const useConfirmations = () => {
     );
   };
 
-  const getConfirmations = async (userId?: string): Promise<Guest[] | null> => {
+  const getConfirmations = async (
+    userId?: string
+  ): Promise<{
+    guests: Guest[];
+    user: { restrictions: string } | null;
+  } | null> => {
     if (!userId) return null;
-    const dbCompanions: GuestsFromDB[] = await handleApiCall(() =>
+    const dbGuests: CompanionsFromDB = await handleApiCall(() =>
       // @ts-ignore
-      supabase.from("confirmations").select("*").eq("user_id", userId)
+      supabase.from("confirmations").select("*").eq("user_id", userId).single()
     );
 
-    return dbCompanions && dbCompanions[0]?.companions
-      ? (JSON.parse(dbCompanions[0].companions) as Guest[])
-      : null;
+    const { companions, user_restrictions: userRestrictions } = dbGuests;
+
+    return {
+      guests: companions ? JSON.parse(companions) : [],
+      user: userRestrictions ? { restrictions: userRestrictions } : null,
+    };
   };
 
   return {

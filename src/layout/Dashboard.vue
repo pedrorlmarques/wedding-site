@@ -1,7 +1,7 @@
 <template>
   <main>
     <section>
-      <Navigation />
+      <Navigation with-navigation />
       <slot />
     </section>
   </main>

@@ -3,7 +3,7 @@
     <div class="relative">
       <img class="groom-img" :src="GroomsImgUrl" alt="noivos" />
       <div class="relative container z-10 mx-auto px-2 sm:px-32">
-        <Navigation />
+        <Navigation :with-navigation="false" />
         <Timer class="my-4" />
         <h1 class="wedding-font">Maria Inês e Pedro</h1>
       </div>
@@ -31,7 +31,7 @@ main {
 }
 
 .groom-img {
-  object-position: 100% 75%;
+  object-position: 25% 75%;
   @apply absolute top-0 left-0 w-full h-full object-cover opacity-20;
 }
 </style>

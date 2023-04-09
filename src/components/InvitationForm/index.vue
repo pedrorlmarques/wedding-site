@@ -1,39 +1,34 @@
 <template>
   <form @submit.prevent="handleInvitation" v-if="!isLoading">
     <div>
-      <label for="name"
-        >Nome Completo <span class="text-red-600">*</span></label
-      >
-      <input
-        type="text"
-        placeholder="O seu nome"
-        v-model="invitedPerson.name"
-      />
+      <label for="name">Convidado <span class="text-red-600">*</span></label>
+      <template v-if="invitedPerson.user && invitedPerson.user.added">
+        <GuestAccordion
+          :index="0"
+          :guest="invitedPerson.user"
+          :toggle-accordion="toggleAccordion"
+          :edited-guest="editedGuest"
+        />
+      </template>
+      <template v-else>
+        <GuestForm
+          :index="0"
+          :guest="invitedPerson.user"
+          :remove-guest="cancelGuest"
+          :accept-guest="() => acceptGuest(invitedPerson.user, true)"
+        />
+      </template>
     </div>
     <div>
-      <label for="guests">Convidados</label>
-
+      <label for="guests">Outros Convidados</label>
       <div
         v-show="invitedPerson.guests.length === 0"
         class="alert alert-warning"
         role="alert"
       >
-        <svg
-          aria-hidden="true"
-          class="flex-shrink-0 inline w-5 h-5 mr-3"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-            clip-rule="evenodd"
-          ></path>
-        </svg>
-        <span class="sr-only">Info</span>
+        <WarningIcon />
         <p class="description">
-          <span class="font-medium">Atenção!</span>
+          <span class="font-extrabold">Atenção!</span>
           Este aviso aparece apenas caso não queiras mesmo levar convidados, e
           quando adicionares não te esqueças de referir as suas
           <strong>restrições alimentares</strong> ou outras observações.
@@ -46,84 +41,21 @@
         v-for="(guest, guestIdx) in invitedPerson.guests"
       >
         <template v-if="guest.added">
-          <h2 class="m-0 p-0" :id="`accordion-${guestIdx}`">
-            <button
-              type="button"
-              class="accordion-btn"
-              @click.prevent="toggleAccordion(guest)"
-              :data-accordion-target="`#accordion-${guestIdx}`"
-              aria-expanded="true"
-              :aria-controls="`accordion-${guestIdx}`"
-            >
-              <span class="whitespace-nowrap">{{ guest.name }}</span>
-
-              <div class="flex flex-row justify-end">
-                <button type="button" class="arrow-btn">
-                  <Arrow :class="guest.isOpen ? ' rotate-180' : ''" />
-                </button>
-                <button
-                  type="button"
-                  class="edit-btn"
-                  @click.prevent="editedGuest(guest)"
-                >
-                  <EditPencilSVG />
-                </button>
-                <button
-                  type="button"
-                  class="remove-btn"
-                  @click.prevent="removeGuest(guest)"
-                >
-                  <DeleteSVG />
-                </button>
-              </div>
-            </button>
-          </h2>
-          <div
-            id="accordion-collapse-body-1"
-            :class="guest.isOpen ? '' : 'hidden'"
-            :aria-labelledby="`accordion-${guestIdx}`"
-          >
-            <div class="restrictions--wrapper">
-              <p class="restrictions--description">
-                {{
-                  guest.restrictions
-                    ? `Observações: ${guest.restrictions}`
-                    : "Sem observações"
-                }}
-              </p>
-            </div>
-          </div>
+          <GuestAccordion
+            :index="guestIdx"
+            :guest="guest"
+            :edited-guest="editedGuest"
+            :remove-guest="removeGuest"
+            :toggle-accordion="toggleAccordion"
+          />
         </template>
         <template v-else>
-          <input
-            type="text"
-            name="name"
-            placeholder="Nome do Convidado"
-            v-model="guest.name"
+          <GuestForm
+            :index="guestIdx"
+            :guest="guest"
+            :remove-guest="cancelGuest"
+            :accept-guest="() => acceptGuest(guest)"
           />
-          <textarea
-            type="text"
-            name="restrictions"
-            placeholder="Escreve as restricções alimentares ou uma outra observação aqui..."
-            v-model="guest.restrictions"
-          />
-          <div class="grid grid-cols-2 gap-6">
-            <button
-              type="button"
-              class="cancel-guest-btn"
-              @click="removeGuest(guest)"
-            >
-              <CancelSVG class="cancel-svg" />
-            </button>
-            <button
-              type="button"
-              class="add-guest-btn"
-              @click="acceptGuest(guest)"
-              :disabled="!guest.name"
-            >
-              <CheckSVG class="check-svg" />
-            </button>
-          </div>
         </template>
       </div>
       <template></template>
@@ -138,22 +70,22 @@
       <template> </template>
     </div>
     <button type="submit" class="send-btn" :disabled="!FormMeta.dirty">
-      Enviar Lista de Convidados
+      Confirmar presenças
     </button>
   </form>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import * as yup from "yup";
 import { useForm } from "vee-validate";
 
+import WarningIcon from "@assets/warning.svg?component";
+
+import GuestAccordion from "@/components/GuestAccordion/index.vue";
+import GuestForm from "@/components/GuestForm/index.vue";
+
 import PlusSVG from "@/assets/plus.svg?component";
-import Arrow from "@/assets/arrow-down-up.svg?component";
-import EditPencilSVG from "@/assets/edit-pencil.svg?component";
-import DeleteSVG from "@/assets/delete.svg?component";
-import CheckSVG from "@/assets/check.svg?component";
-import CancelSVG from "@/assets/cancel.svg?component";
 
 import { useAuth } from "@/composables/useAuth";
 import { useConfirmations } from "@/composables/useConfirmations";
@@ -165,20 +97,28 @@ const { userSession } = useAuth();
 const { addNewGuests, updateGuests, getConfirmations } = useConfirmations();
 
 const invitedPerson = ref<InvitedPerson>({
-  name:
-    userSession.value?.user.user_metadata.name ||
-    userSession.value?.user.user_metadata.full_name ||
-    "",
+  user: {
+    name:
+      userSession.value?.user.user_metadata.name ||
+      userSession.value?.user.user_metadata.full_name ||
+      "",
+    restrictions: "",
+    isOpen: false,
+    added: true,
+  },
   guests: [],
 });
 
 // Form
 const schema = {
-  name: yup.string().required("O nome é obrigatório"),
-  guest: yup.array().of(
+  user: yup.object().shape({
+    name: yup.string().required("O nome é obrigatório"),
+    restrictions: yup.string().nullable(),
+  }),
+  guests: yup.array().of(
     yup.object().shape({
       name: yup.string().required("O nome é obrigatório"),
-      restrictions: yup.string(),
+      restrictions: yup.string().nullable(),
     })
   ),
 };
@@ -203,9 +143,13 @@ const addNewGuest = () => {
   });
 };
 
-const acceptGuest = (guest: Guest) => {
+const acceptGuest = (guest: Guest, isUser?: boolean) => {
   guest.added = true;
-  guest.isOpen = false;
+  if (isUser) {
+    invitedPerson.value.user = guest;
+    setFieldValue("user", invitedPerson.value.user);
+    return;
+  }
   setFieldValue("guests", invitedPerson.value.guests);
 };
 
@@ -213,11 +157,12 @@ const editedGuest = (guest: Guest) => {
   guest.added = false;
 };
 
+const cancelGuest = (guest: Guest) => {
+  guest.added = true;
+};
+
 const removeGuest = (guest: Guest) => {
-  invitedPerson.value.guests.splice(
-    invitedPerson.value.guests.indexOf(guest),
-    1
-  );
+  invitedPerson.value.guests.splice(invitedPerson.value.guests.indexOf(guest));
   setFieldValue("guests", invitedPerson.value.guests);
 };
 
@@ -243,12 +188,23 @@ const handleInvitation = handleSubmit(async (values) => {
 onMounted(async () => {
   const result = await getConfirmations(userSession.value?.user.id);
   if (result != null) {
-    const newGuests = result.map((guest) => ({
+    console.log(result);
+    const oldUser = {
+      ...result.user,
+      name:
+        userSession.value?.user.user_metadata.name ||
+        userSession.value?.user.user_metadata.full_name ||
+        "",
+      added: true,
+      isOpen: false,
+    };
+    const oldGuests = result.guests.map((guest) => ({
       ...guest,
       added: true,
       isOpen: false,
     }));
-    invitedPerson.value.guests = newGuests;
+    invitedPerson.value.user = oldUser as UserForInvitation;
+    invitedPerson.value.guests = oldGuests;
     newPerson.value = false;
   } else {
     newPerson.value = true;
@@ -275,20 +231,6 @@ form {
 
     & textarea {
       @apply block px-4 py-2 w-full text-gray-900 rounded-lg border border-gray-300;
-    }
-
-    & .formkit-outer[data-invalid="true"] {
-      & input {
-        @apply border-red-500;
-      }
-    }
-
-    & .formkit-messages {
-      @apply p-0 m-0;
-
-      & .formkit-message {
-        @apply text-xs text-red-500 text-left list-none m-0;
-      }
     }
   }
 }
@@ -323,7 +265,7 @@ div.accordion {
   @apply p-0 px-4 text-left;
 
   &&& .restrictions--description {
-    @apply m-0 pb-4 text-gray-500;
+    @apply mt-4 pb-4 text-gray-500;
   }
 }
 

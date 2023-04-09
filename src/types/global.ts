@@ -20,14 +20,20 @@ declare interface Guest {
   isOpen: boolean;
 }
 
-declare interface GuestsFromDB {
+declare interface UserForInvitation {
+  name: string;
+  restrictions: string;
+  added: boolean;
+  isOpen: boolean;
+}
+declare interface CompanionsFromDB {
   companions: string;
+  user_restrictions: string;
   user_id: string;
   created_at: string;
   id: string;
 }
 declare interface InvitedPerson {
-  name: string;
-  uuid?: string;
+  user: UserForInvitation;
   guests: Guest[];
 }
