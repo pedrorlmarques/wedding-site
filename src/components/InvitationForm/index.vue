@@ -26,7 +26,7 @@
         class="alert alert-warning"
         role="alert"
       >
-        <WarningIcon />
+        <WarningIcon class="w-5 h-5 mr-3 flex-shrink-0" />
         <p class="description">
           <span class="font-extrabold">Atenção!</span>
           Este aviso aparece apenas caso não queiras mesmo levar convidados, e
@@ -188,7 +188,6 @@ const handleInvitation = handleSubmit(async (values) => {
 onMounted(async () => {
   const result = await getConfirmations(userSession.value?.user.id);
   if (result != null) {
-    console.log(result);
     const oldUser = {
       ...result.user,
       name:

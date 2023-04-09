@@ -103,16 +103,20 @@ export const useConfirmations = () => {
     user: { restrictions: string } | null;
   } | null> => {
     if (!userId) return null;
-    const dbGuests: CompanionsFromDB = await handleApiCall(() =>
+    const dbGuests: CompanionsFromDB[] = await handleApiCall(() =>
       // @ts-ignore
-      supabase.from("confirmations").select("*").eq("user_id", userId).single()
+      supabase.from("confirmations").select("*").eq("user_id", userId)
     );
 
-    const { companions, user_restrictions: userRestrictions } = dbGuests;
-
     return {
-      guests: companions ? JSON.parse(companions) : [],
-      user: userRestrictions ? { restrictions: userRestrictions } : null,
+      guests:
+        dbGuests[0] && dbGuests[0]?.companions
+          ? JSON.parse(dbGuests[0].companions)
+          : [],
+      user:
+        dbGuests[0] && dbGuests[0]?.user_restrictions
+          ? { restrictions: dbGuests[0].user_restrictions }
+          : null,
     };
   };
 
