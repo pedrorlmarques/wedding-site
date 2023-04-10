@@ -58,24 +58,24 @@ export const useConfirmations = () => {
 			restrictions: guest.restrictions,
 		}));
 
-	const addNewGuests = async (userWithGuests: InvitedPerson, uid: string) => {
-		return await handleApiCall(
-			() =>
-				// @ts-ignore
-				supabase
-					.from('confirmations')
-					.insert({
-						user_id: uid,
-						companions: JSON.stringify(
-							updateCompanionsObj(userWithGuests.guests)
-						),
-						user_restrictions: userWithGuests.user.restrictions,
-					})
-					.single(),
-			'Os teus convidados já foram adicionados à lista de confirmações e com as devidas observações. Obrigado!',
-			'Ocorreu um erro ao adicionar os convidados à lista de confirmações. Por favor, tenta novamente.'
-		);
-	};
+  const addNewGuests = async (userWithGuests: InvitedPerson, uid: string) => {
+    return await handleApiCall(
+      () =>
+        // @ts-ignore
+        supabase
+          .from("confirmations")
+          .insert({
+            user_id: uid,
+            companions: JSON.stringify(
+              updateCompanionsObj(userWithGuests.guests)
+            ),
+            user_restrictions: userWithGuests.user.restrictions || null,
+          })
+          .single(),
+      "Os teus convidados já foram adicionados à lista de confirmações e com as devidas observações. Obrigado!",
+      "Ocorreu um erro ao adicionar os convidados à lista de confirmações. Por favor, tenta novamente."
+    );
+  };
 
 	const updateGuests = async (userWithGuests: InvitedPerson, uid: string) => {
 		return await handleApiCall(
