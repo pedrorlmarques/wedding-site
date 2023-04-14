@@ -54,8 +54,6 @@ router.beforeEach((to, _from, next) => {
 	const { isLoggedIn } = useAuth();
 	const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
 
-	console.log(!isLoggedIn());
-
 	if (requiresAuth && !isLoggedIn()) next('/login');
 	else if (!requiresAuth && isLoggedIn()) next('/');
 	else next();
