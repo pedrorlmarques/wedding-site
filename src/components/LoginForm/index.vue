@@ -16,7 +16,6 @@
         type="email"
         name="email"
         id="email"
-        placeholder="nome@email.pt"
         v-model="user.email"
         validation="required|email"
         :validation-messages="{
@@ -33,7 +32,6 @@
         type="password"
         name="password"
         id="password"
-        placeholder="••••••••"
         validation="required|length:6|matches:/[^a-zA-Z]/"
         :validation-messages="{
           required: 'Por favor insira a sua password',
@@ -63,7 +61,7 @@
         Esqueceu-se da password?
       </router-link>
     </div>
-    <button type="submit" :disabled="!valid">Sign in</button>
+    <button type="submit" :disabled="!valid">Entrar</button>
     <p class="text-sm font-light text-gray-500">
       <span>Ainda não tens conta?</span>
       <router-link as="a" to="/register" class="register">

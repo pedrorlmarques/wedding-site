@@ -61,7 +61,6 @@
 </template>
 
 <script setup lang="ts">
-import ArrowLeftIcon from "@/assets/arrow-left.svg?component";
 import DashboardLayout from "@/layout/Dashboard.vue";
 import InvitationForm from "@components/InvitationForm/index.vue";
 

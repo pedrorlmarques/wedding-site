@@ -108,8 +108,6 @@ export const useConfirmations = () => {
       supabase.from("confirmations").select("*").eq("user_id", userId)
     );
 
-    console.log(dbGuests);
-
     return dbGuests && dbGuests[0]
       ? {
           guests:
