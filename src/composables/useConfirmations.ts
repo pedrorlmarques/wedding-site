@@ -77,6 +77,7 @@ export const useConfirmations = () => {
     );
   };
 
+<<<<<<< Updated upstream
 	const updateGuests = async (userWithGuests: InvitedPerson, uid: string) => {
 		return await handleApiCall(
 			() =>
@@ -95,6 +96,26 @@ export const useConfirmations = () => {
 			'Ocorreu um erro ao remover os convidados da lista de confirmações. Por favor, tenta novamente.'
 		);
 	};
+=======
+  const updateGuests = async (userWithGuests: InvitedPerson, uid: string) => {
+    return await handleApiCall(
+      () =>
+        // @ts-ignore
+        supabase
+          .from("confirmations")
+          .update({
+            user_id: uid,
+            companions: JSON.stringify(
+              updateCompanionsObj(userWithGuests.guests)
+            ),
+            user_restrictions: userWithGuests.user.restrictions,
+          })
+          .eq("user_id", uid),
+      "A tua lista de convidados foi atualizado com sucesso! Obrigado!",
+      "Ocorreu um erro ao remover os convidados da lista de confirmações. Por favor, tenta novamente."
+    );
+  };
+>>>>>>> Stashed changes
 
 	const getConfirmations = async (
 		userId?: string
