@@ -1,39 +1,39 @@
 declare interface Credentials {
-  email: string;
-  password: string;
-  name?: string;
-  provider?: "email" | "google" | undefined;
+	email: string;
+	password: string;
+	name?: string;
+	provider?: 'email' | 'google' | undefined;
 }
 
 declare interface User {
-  email: string;
-  password: string;
-  name?: string;
-  confirmPassword?: string;
-  rememberMe?: boolean;
+	email: string;
+	password: string;
+	name?: string;
+	confirmPassword?: string;
+	rememberMe?: boolean;
 }
 
 declare interface Guest {
-  name: string;
-  restrictions: string;
-  added: boolean;
-  isOpen: boolean;
+	name: string;
+	restrictions: string;
+	added: boolean;
+	isOpen: boolean;
 }
 
 declare interface UserForInvitation {
-  name: string;
-  restrictions: string;
-  added: boolean;
-  isOpen: boolean;
+	name: string;
+	restrictions: string;
+	added: boolean;
+	isOpen: boolean;
 }
 declare interface CompanionsFromDB {
-  companions: string;
-  user_restrictions: string;
-  user_id: string;
-  created_at: string;
-  id: string;
+	companions: string;
+	user_restrictions: string;
+	user_id: string;
+	created_at: string;
+	id: string;
 }
 declare interface InvitedPerson {
-  user: UserForInvitation;
-  guests: Guest[];
+	user: UserForInvitation;
+	guests: Guest[];
 }

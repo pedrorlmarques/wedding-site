@@ -1,22 +1,22 @@
 <template>
-  <main>
-    <section>
-      <Navigation with-navigation />
-      <slot />
-    </section>
-  </main>
+	<main>
+		<section>
+			<Navigation with-navigation />
+			<slot />
+		</section>
+	</main>
 </template>
 
 <script setup>
-import Navigation from "@/components/Navigation/index.vue";
+	import Navigation from '@/components/Navigation/index.vue';
 </script>
 
 <style lang="postcss" scoped>
-main {
-  @apply flex flex-col min-h-screen bg-secondary-50 w-full;
-}
+	main {
+		@apply flex flex-col min-h-screen bg-secondary-50 w-full;
+	}
 
-section {
-  @apply max-w-7xl mx-auto relative w-full;
-}
+	section {
+		@apply max-w-7xl mx-auto relative w-full;
+	}
 </style>

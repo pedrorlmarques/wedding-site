@@ -1,5 +1,5 @@
-import { createRouter, createWebHistory } from "vue-router";
-import { useAuth } from "@/composables/useAuth";
+import { createRouter, createWebHistory } from 'vue-router';
+import { supabase } from './composables/useSupabase';
 
 const routes = [
   {
@@ -54,17 +54,17 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes,
+	history: createWebHistory(import.meta.env.BASE_URL),
+	routes,
 });
 
-router.beforeEach((to, _from, next) => {
-  const { isLoggedIn } = useAuth();
-  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+router.beforeEach(async (to, _from, next) => {
+	const user = await supabase.auth.getUser();
+	const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
 
-  if (requiresAuth && !isLoggedIn()) next("/login");
-  else if (!requiresAuth && isLoggedIn()) next("/");
-  else next();
+	if (requiresAuth && !user) next('/login');
+	else if (!requiresAuth && user) next('/');
+	else next();
 });
 
 export default router;
