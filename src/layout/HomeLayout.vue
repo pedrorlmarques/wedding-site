@@ -19,7 +19,7 @@ import GroomsImgUrl from "@/assets/noivos.jpg?url";
 
 <style lang="postcss" scoped>
 body {
-  @apply bg-secondary-50;
+  @apply bg-secondary-100;
 }
 
 main {

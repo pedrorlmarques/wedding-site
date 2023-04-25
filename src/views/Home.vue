@@ -19,6 +19,15 @@
             que vem contigo. Contamos contigo!
           </template>
         </AnchorToPagesButton>
+        <AnchorToPagesButton title="Playlist" path="/playlist">
+          <template #icon>
+            <DiscoBallSvg />
+          </template>
+          <template #description>
+            Conheces bem os noivos e sabes quais são os gostos deles? Muito bem,
+            então sugere as melhores músicas nesta fantástica Playlist!
+          </template>
+        </AnchorToPagesButton>
         <AnchorToPagesButton title="Fotografias" path="/fotos" disabled>
           <template #icon>
             <CameraSvg />
@@ -34,15 +43,6 @@
           </template>
           <template #description>
             Não sabes o que contém o Menu? Aqui podes ver em detalhe!
-          </template>
-        </AnchorToPagesButton>
-        <AnchorToPagesButton title="Playlist" path="/playlist" disabled>
-          <template #icon>
-            <DiscoBallSvg />
-          </template>
-          <template #description>
-            Conheces bem os noivos e sabes quais são os gostos deles? Muito bem,
-            então sugere as melhores músicas nesta fantástica Playlist!
           </template>
         </AnchorToPagesButton>
       </div>

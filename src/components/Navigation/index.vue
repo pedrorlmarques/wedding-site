@@ -81,9 +81,10 @@
             <router-link
               custom
               :to="page.link"
-              v-slot="{ href, isActive, isExactActive }"
+              v-slot="{ href, isActive, isExactActive, navigate }"
               ><a
                 :href="href"
+                @click="navigate"
                 class="relative flex items-center justify-between py-2 pl-3 pr-4 stroke-black rounded hover:bg-primary-200 md:hover:bg-transparent md:hover:text-primary-600 md:p-0"
                 :class="{
                   'bg-primary-200 md:bg-transparent md:text-primary-600':
@@ -156,6 +157,10 @@ const dashboardLinks = ref([
     disabled: false,
   },
   {
+    link: "/playlist",
+    label: "Playlist",
+  },
+  {
     link: "/fotografias",
     label: "Fotografias",
     disabled: true,
@@ -163,11 +168,6 @@ const dashboardLinks = ref([
   {
     link: "/menu",
     label: "Menu",
-    disabled: true,
-  },
-  {
-    link: "/playlist",
-    label: "Playlist",
     disabled: true,
   },
 ]);
