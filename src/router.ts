@@ -1,5 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import { supabase } from './composables/useSupabase';
+import { createRouter, createWebHistory } from "vue-router";
+import { useAuth } from "@/composables/useAuth";
+import { supabase } from "@/composables/useSupabase";
 
 const routes = [
   {
@@ -54,17 +55,33 @@ const routes = [
 ];
 
 const router = createRouter({
-	history: createWebHistory(import.meta.env.BASE_URL),
-	routes,
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes,
+});
+
+supabase.auth.getSession().then(({ data: { session } }) => {
+  const { userSession } = useAuth();
+  userSession.value = session;
+});
+
+supabase.auth.onAuthStateChange(async (event, session) => {
+  console.log(event);
+  const { userSession } = useAuth();
+  if (event == "SIGNED_OUT") {
+    userSession.value = null;
+    router.push("/login");
+  }
 });
 
 router.beforeEach(async (to, _from, next) => {
-	const user = await supabase.auth.getUser();
-	const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
 
-	if (requiresAuth && !user) next('/login');
-	else if (!requiresAuth && user) next('/');
-	else next();
+  if (requiresAuth && !user) next("/login");
+  else if (!requiresAuth && user) next("/");
+  else next();
 });
 
 export default router;
