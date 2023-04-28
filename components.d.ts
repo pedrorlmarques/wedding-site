@@ -14,6 +14,7 @@ declare module '@vue/runtime-core' {
     Dashboard: typeof import('./src/layout/Dashboard.vue')['default']
     Default: typeof import('./src/layout/Default.vue')['default']
     EmailConfirmation: typeof import('./src/views/EmailConfirmation.vue')['default']
+    EmbeddedPlaylist: typeof import('./src/components/Playlist/EmbeddedPlaylist/index.vue')['default']
     ForgotPassword: typeof import('./src/views/ForgotPassword.vue')['default']
     ForgotPasswordForm: typeof import('./src/components/ForgotPasswordForm/index.vue')['default']
     GuestAccordion: typeof import('./src/components/GuestAccordion/index.vue')['default']
@@ -25,12 +26,14 @@ declare module '@vue/runtime-core' {
     Login: typeof import('./src/views/Login.vue')['default']
     LoginForm: typeof import('./src/components/LoginForm/index.vue')['default']
     Navigation: typeof import('./src/components/Navigation/index.vue')['default']
+    Playlist: typeof import('./src/views/Playlist.vue')['default']
     RecoverPassword: typeof import('./src/views/RecoverPassword.vue')['default']
     RecoverPasswordForm: typeof import('./src/components/RecoverPasswordForm/index.vue')['default']
     Register: typeof import('./src/views/Register.vue')['default']
     RegisterForm: typeof import('./src/components/RegisterForm/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SearchForm: typeof import('./src/components/Playlist/SearchForm/index.vue')['default']
     Timer: typeof import('./src/components/Timer/index.vue')['default']
   }
 }
