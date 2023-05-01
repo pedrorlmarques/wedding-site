@@ -11,7 +11,7 @@
 		<article>
 			<div>
 				<h1 class="block mt-8">
-					Estás oficialmente convidado para o nosso casamento 💚
+					Recebeu um convite de <br> Maria Inês e Pedro
 				</h1>
 				<img src="@/assets/illustration-bg.png" />
 				<ul class="!m-0 !p-0 list-none">
@@ -47,10 +47,8 @@
 			</div>
 			<div>
 				<p class="text-center md:text-left !mt-0">
-					Por favor insere aqui abaixo o teu nome, e os teus convidados com
-					todas as observações de cada um que queiras fazer. Avisa-nos de todas
-					as restrições alimentares que tenham. <br />
-					Estes dados não serão partilhados com ninguém.
+					Insira o seu nome bem como as suas restrições e o mesmo para as pessoas que o acompanham.
+					Não se esqueça de mencionar as restrições alimentares que tenham.
 				</p>
 				<InvitationForm />
 			</div>

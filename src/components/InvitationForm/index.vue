@@ -20,18 +20,6 @@
 		<div>
 			<label for="guests">Outros Convidados</label>
 			<div
-				v-show="invitedPerson.guests.length === 0"
-				class="alert alert-warning"
-				role="alert">
-				<WarningIcon class="w-5 h-5 mr-3 flex-shrink-0" />
-				<p class="description">
-					<span class="font-extrabold">Atenção!</span>
-					Este aviso aparece apenas caso não queiras mesmo levar convidados, e
-					quando adicionares não te esqueças de referir as suas
-					<strong>restrições alimentares</strong> ou outras observações.
-				</p>
-			</div>
-			<div
 				class="accordion"
 				id="accordion-collapse"
 				data-accordion="collapse"
@@ -62,7 +50,7 @@
 			</button>
 		</div>
 		<button type="submit" class="send-btn" :disabled="!FormMeta.dirty">
-			Confirmar Presenças
+			Confirmar
 		</button>
 	</form>
 </template>

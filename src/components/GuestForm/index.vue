@@ -2,12 +2,12 @@
 	<input
 		type="text"
 		name="name"
-		placeholder="Nome do Convidado"
+		placeholder="Nome"
 		v-model="guest.name" />
 	<textarea
 		type="text"
 		name="restrictions"
-		placeholder="Escreve as restricções alimentares ou uma outra observação aqui..."
+		placeholder="Escreva as restrições alimentares ou qualquer outra observação"
 		v-model="guest.restrictions" />
 	<div class="grid grid-cols-2 gap-6">
 		<button

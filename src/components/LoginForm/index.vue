@@ -61,7 +61,7 @@
 		<p class="text-sm font-light text-gray-500">
 			<span>Ainda não tem conta?</span>
 			<router-link as="a" to="/register" class="register">
-				Regista-te
+				Registe-se
 			</router-link>
 		</p>
 	</FormKit>

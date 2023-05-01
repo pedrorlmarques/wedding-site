@@ -9,7 +9,7 @@
 				<slot name="description"></slot>
 			</p>
 			<router-link :to="path" class="anchor-link">
-				Segue aqui
+				Veja aqui
 				<svg
 					class="open-svg"
 					fill="currentColor"
