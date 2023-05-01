@@ -6,7 +6,7 @@
 					<ArrowLeftIcon class="stroke-primary-600 inline-block" />
 					Voltar
 				</router-link>
-				<h1 class="hello">Bem vindos ao Casamento do Ano!</h1>
+				<h1 class="hello text-center">Casamento <br />Maria Inês & Pedro</h1>
 				<RegisterForm />
 			</div>
 		</div>

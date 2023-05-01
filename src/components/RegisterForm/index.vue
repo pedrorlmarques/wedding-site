@@ -5,8 +5,7 @@
 		@submit="handleSubmit"
 		#default="{ state: { valid } }">
 		<p>
-			Registe-se no nosso site com facilidade - insira o seu email e crie a sua
-			própria password, ou faça login instantaneamente com a sua conta Google.
+			Registe-se no nosso site ou faça login com a sua conta Google.
 		</p>
 		<div>
 			<label for="name">Nome <span class="text-red-500">*</span></label>
@@ -14,7 +13,7 @@
 				type="text"
 				name="name"
 				id="name"
-				placeholder="o seu nome"
+				placeholder=""
 				v-model="user.name"
 				validation="required"
 				:validation-messages="{
@@ -27,7 +26,7 @@
 				type="email"
 				name="email"
 				id="email"
-				placeholder="nome@email.pt"
+				placeholder=""
 				v-model="user.email"
 				validation="required|email"
 				:validation-messages="{
@@ -45,7 +44,7 @@
 				<FormKit
 					type="password"
 					name="password"
-					placeholder="••••••••"
+					placeholder=""
 					v-model="user.password"
 					validation="required|length:6|matches:/[^a-zA-Z]/"
 					:validation-messages="{
@@ -58,12 +57,12 @@
 				<label
 					for="password_confirm"
 					class="block mb-2 text-sm font-medium text-gray-900">
-					Confirmação da Password <span class="text-red-500">*</span>
+					Confirmar a Password <span class="text-red-500">*</span>
 				</label>
 				<FormKit
 					type="password"
 					name="password_confirm"
-					placeholder="••••••••"
+					placeholder=""
 					validation="required|confirm"
 					v-model="user.confirmPassword"
 					:validation-messages="{
@@ -73,7 +72,7 @@
 					help="A password deve ser igual à anterior" />
 			</div>
 		</FormKit>
-		<button type="submit" :disabled="!valid">Criar uma conta</button>
+		<button type="submit" :disabled="!valid">Criar conta</button>
 	</FormKit>
 </template>
 
