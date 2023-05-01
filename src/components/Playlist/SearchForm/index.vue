@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="search-container">
     <form>
       <label
@@ -129,3 +129,7 @@ const searchResultsIsEmpty = computed(
   @apply overflow-hidden bg-white border border-gray-300 rounded-xl mt-4;
 }
 </style>
+ -->
+
+<template></template>
+<script></script>
