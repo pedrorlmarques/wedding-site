@@ -1,18 +1,16 @@
 <template>
 	<DashboardLayout>
-		<!--  <div class="container max-w-7xl w-full px-2 sm:px-4 flex justify-start">
+		<div class="container max-w-7xl w-full px-2 sm:px-4 flex justify-start">
       <router-link custom v-slot="{ navigate }" to="/">
         <button class="btn" type="button" @click="navigate">
           <ArrowLeftIcon />
           Voltar
         </button>
       </router-link>
-    </div> -->
+    </div>
 		<article>
 			<div>
-				<h1 class="block mt-8">
-					Recebeu um convite de <br> Maria Inês e Pedro
-				</h1>
+				<h1 class="hello text-center block mt-8 ">Recebeu um convite de <br />Maria Inês & Pedro</h1>
 				<img src="@/assets/illustration-bg.png" />
 				<ul class="!m-0 !p-0 list-none">
 					<li class="flex !p-0 items-center text-left">
@@ -20,7 +18,7 @@
 							width="24"
 							height="24"
 							style="stroke-width: 1.5px; fill: none; stroke: black" />
-						<span class="ml-4">Sábado, 5 de Agosto de 2023 - 12H30M</span>
+						<span class="ml-4">Sábado, 5 de Agosto de 2023 - 12H30</span>
 					</li>
 					<li class="flex !p-0 items-center text-left">
 						<ChurchIcon
@@ -37,18 +35,17 @@
 					<li class="flex !p-0 items-center text-left">
 						<RestaurantIcon width="24" height="24" />
 						<a
-							href="https://goo.gl/maps/n8kkhyyaFDGR7osJA"
+							href="https://goo.gl/maps/YCLRwfW8HYerAGAH7"
 							target="_blank"
 							class="ml-4"
-							>Estrada do Vale dos Barris, 2950-055 Palmela</a
+							>Halma - Estrada do Vale dos Barris, 2950-055 Palmela</a
 						>
 					</li>
 				</ul>
 			</div>
 			<div>
 				<p class="text-center md:text-left !mt-0">
-					Insira o seu nome bem como as suas restrições e o mesmo para as pessoas que o acompanham.
-					Não se esqueça de mencionar as restrições alimentares que tenham.
+					Insira o seu nome bem como as suas restrições alimentares e o mesmo para as pessoas que o acompanham.
 				</p>
 				<InvitationForm />
 			</div>
