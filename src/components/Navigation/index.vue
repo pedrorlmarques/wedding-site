@@ -154,6 +154,7 @@ const dashboardLinks = ref([
   {
     link: "/playlist",
     label: "Playlist",
+    disabled: true,
   },
   {
     link: "/fotografias",
