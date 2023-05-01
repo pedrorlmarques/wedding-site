@@ -6,11 +6,11 @@
 		#default="{ state: { valid } }">
 		<button type="button" class="google-btn" @click="handleSubmit('google')">
 			<GoogleIcon icon="google" class="w-4 h-4 mr-2 -ml-1 fill-white" />
-			<span>Faz Login com o Google</span>
+			<span>Login com o Google</span>
 		</button>
 		<hr />
 		<div>
-			<label for="email">O seu e-mail</label>
+			<label for="email">E-mail</label>
 			<FormKit
 				type="email"
 				name="email"
@@ -50,7 +50,7 @@
 						@click="rememberMe()" />
 				</div>
 				<div class="ml-3 text-sm">
-					<label for="remember" class="text-gray-500 mb-0">Lembrar-me</label>
+					<label for="remember" class="text-gray-500 mb-0">Lembrar</label>
 				</div>
 			</div>
 			<router-link to="/forgot-password" class="forgot">
@@ -59,7 +59,7 @@
 		</div>
 		<button type="submit" :disabled="!valid">Entrar</button>
 		<p class="text-sm font-light text-gray-500">
-			<span>Ainda não tens conta?</span>
+			<span>Ainda não tem conta?</span>
 			<router-link as="a" to="/register" class="register">
 				Regista-te
 			</router-link>
