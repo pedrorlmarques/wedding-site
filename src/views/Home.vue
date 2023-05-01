@@ -16,6 +16,14 @@
 						Adicione as pessoas que vão ao casamento bem como as suas restrições alimentares!
 					</template>
 				</AnchorToPagesButton>
+				<AnchorToPagesButton title="Sessão Noivado" path="/noivado" disabled>
+					<template #icon>
+						<HeartSvg />
+					</template>
+					<template #description>
+						Os noivos tornaram-se modelos por um dia? Veja as fotografias da sessão de noivado!
+					</template>
+				</AnchorToPagesButton>
 				<AnchorToPagesButton title="Fotografias" path="/fotos" disabled>
 					<template #icon>
 						<CameraSvg />
