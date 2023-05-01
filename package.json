@@ -13,8 +13,8 @@
   "dependencies": {
     "@formkit/core": "0.16.4",
     "@formkit/vue": "0.16.4",
-    "@supabase/gotrue-js": "2.23.0",
-    "@supabase/supabase-js": "2.20.0",
+    "@supabase/gotrue-js": "2.24.0",
+    "@supabase/supabase-js": "2.21.0",
     "@vueuse/core": "9.13.0",
     "vee-validate": "4.8.4",
     "vue-router": "4.1.6",
@@ -24,9 +24,11 @@
   "devDependencies": {
     "@originjs/vite-plugin-federation": "1.2.1",
     "@tailwindcss/typography": "0.5.9",
-    "@types/node": "18.16.1",
+    "@types/node": "18.16.2",
     "@vitejs/plugin-vue": "4.1.0",
     "autoprefixer": "10.4.14",
+    "axios": "1.4.0",
+    "buffer": "^6.0.3",
     "path": "0.12.7",
     "postcss": "8.4.23",
     "postcss-import": "15.1.0",
