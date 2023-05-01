@@ -1,16 +1,8 @@
 <template>
 	<DashboardLayout>
-		<div class="container max-w-7xl w-full px-2 sm:px-4 flex justify-start">
-      <router-link custom v-slot="{ navigate }" to="/">
-        <button class="btn" type="button" @click="navigate">
-          <ArrowLeftIcon />
-          Voltar
-        </button>
-      </router-link>
-    </div>
 		<article>
 			<div>
-				<h1 class="hello text-center block mt-8 ">Recebeu um convite de <br />Maria Inês & Pedro</h1>
+				<h1 class="block mt-8">Recebeu um convite de <br />Maria Inês & Pedro</h1>
 				<img src="@/assets/illustration-bg.png" />
 				<ul class="!m-0 !p-0 list-none">
 					<li class="flex !p-0 items-center text-left">
