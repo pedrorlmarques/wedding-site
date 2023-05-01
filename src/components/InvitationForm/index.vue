@@ -131,6 +131,7 @@ const {
   setFieldValue,
 } = useForm<InvitedPerson>({
   initialValues: invitedPerson.value,
+  validateOnMount: true,
   validationSchema: schema,
 });
 
@@ -210,7 +211,9 @@ onMounted(async () => {
     newPerson.value = false;
     setFieldValue("user", invitedPerson.value.user);
     setFieldValue("guests", invitedPerson.value.guests);
-    resetForm();
+    resetForm({
+      values: invitedPerson.value,
+    });
   } else {
     const name =
       userSession.value?.user.user_metadata.name ||
