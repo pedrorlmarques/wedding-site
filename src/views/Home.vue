@@ -24,6 +24,15 @@
 						Os noivos tornaram-se modelos por um dia? Veja as fotografias da sessão de noivado!
 					</template>
 				</AnchorToPagesButton>
+				<AnchorToPagesButton title="Playlist" path="/playlist" disabled>
+					<template #icon>
+						<DiscoBallSvg />
+					</template>
+					<template #description>
+						Conhece bem os noivos e sabe quais são os seus gostos? Muito bem,
+						então sugira as melhores músicas nesta fantástica Playlist!
+					</template>
+				</AnchorToPagesButton>
 				<AnchorToPagesButton title="Fotografias" path="/fotos" disabled>
 					<template #icon>
 						<CameraSvg />
@@ -38,15 +47,6 @@
 					</template>
 					<template #description>
 						Não sabe o Menu? Aqui pode ver em detalhe!
-					</template>
-				</AnchorToPagesButton>
-				<AnchorToPagesButton title="Playlist" path="/playlist" disabled>
-					<template #icon>
-						<DiscoBallSvg />
-					</template>
-					<template #description>
-						Conhece bem os noivos e sabe quais são os seus gostos? Muito bem,
-						então sugira as melhores músicas nesta fantástica Playlist!
 					</template>
 				</AnchorToPagesButton>
 			</div>
