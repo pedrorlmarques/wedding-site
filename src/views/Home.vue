@@ -13,9 +13,7 @@
 						<WeddingInvitationSvg />
 					</template>
 					<template #description>
-						Pedimos que aqui adiciones todas as pessoas vão contigo e que
-						menciones quais são as restrições alimentares de cada 1 das pessoas
-						que vem contigo. Contamos contigo!
+						Adicione as pessoas que vão ao casamento bem como as suas restrições alimentares!
 					</template>
 				</AnchorToPagesButton>
 				<AnchorToPagesButton title="Fotografias" path="/fotos" disabled>
@@ -23,8 +21,7 @@
 						<CameraSvg />
 					</template>
 					<template #description>
-						Ao carregares aqui queremos que faças upload das muitas fotografias
-						que vais tirar no nosso casamento!
+						Faça upload das várias fotografias que vai tirar no nosso casamento!
 					</template>
 				</AnchorToPagesButton>
 				<AnchorToPagesButton title="Menu" path="/menu" disabled>
@@ -32,7 +29,7 @@
 						<ForkAndSpoonSvg />
 					</template>
 					<template #description>
-						Não sabes o que contém o Menu? Aqui podes ver em detalhe!
+						Não sabe o Menu? Aqui pode ver em detalhe!
 					</template>
 				</AnchorToPagesButton>
 				<AnchorToPagesButton title="Playlist" path="/playlist" disabled>
@@ -40,8 +37,8 @@
 						<DiscoBallSvg />
 					</template>
 					<template #description>
-						Conheces bem os noivos e sabes quais são os gostos deles? Muito bem,
-						então sugere as melhores músicas nesta fantástica Playlist!
+						Conhece bem os noivos e sabe quais são os seus gostos? Muito bem,
+						então sugira as melhores músicas nesta fantástica Playlist!
 					</template>
 				</AnchorToPagesButton>
 			</div>
