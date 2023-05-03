@@ -8,7 +8,7 @@
 			<p>
 				<slot name="description"></slot>
 			</p>
-			<router-link :to="path" class="anchor-link" :disabled="disabled">
+			<router-link :to="path" class="anchor-link">
 				Veja aqui
 				<svg
 					class="open-svg"
