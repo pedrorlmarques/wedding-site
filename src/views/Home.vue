@@ -24,7 +24,7 @@
 						Os noivos tornaram-se modelos por um dia? Veja as fotografias da sessão de noivado!
 					</template>
 				</AnchorToPagesButton>
-				<AnchorToPagesButton title="Playlist" path="/playlist" disabled>
+				<AnchorToPagesButton title="Playlist" path="/playlist-disable-workaround" disabled>
 					<template #icon>
 						<DiscoBallSvg />
 					</template>
