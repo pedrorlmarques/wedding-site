@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <div class="search-container">
     <form>
       <label
@@ -31,45 +31,12 @@
       </div>
     </form>
     <div v-if="!searchResultsIsEmpty" class="results-container">
-      <div
-        class="text-sm font-medium text-center text-gray-500 border-b border-primary-50"
-      >
-        <ul class="flex flex-wrap !-mb-px !mt-0 !list-none !pl-0">
-          <li class="mr-2 !mt-0 !mb-0">
-            <button
-              class="inline-block p-4 border-b-2 border-transparent rounded-t-lg !no-underline hover:text-gray-600 hover:border-gray-300"
-            >
-              Geral
-            </button>
-          </li>
-          <li class="mr-2 !mt-0 !mb-0">
-            <button
-              class="inline-block p-4 text-primary-600 border-b-2 border-primary-600 !no-underline rounded-t-lg active"
-            >
-              Músicas
-            </button>
-          </li>
-          <li class="mr-2 !mt-0 !mb-0">
-            <button
-              class="inline-block p-4 border-b-2 border-transparent rounded-t-lg !no-underline hover:text-gray-600 hover:border-gray-300"
-            >
-              Artistas
-            </button>
-          </li>
-          <li class="mr-2 !mt-0 !mb-0">
-            <button
-              class="inline-block p-4 border-b-2 border-transparent rounded-t-lg !no-underline hover:text-gray-600 hover:border-gray-300"
-            >
-              Albuns
-            </button>
-          </li>
-        </ul>
-      </div>
-      <ul class="p-4 overflow-y-auto h-96">
+      <ul class="p-8 overflow-y-auto h-96">
         <li
-          v-for="item in searchResults.tracks.items"
+          v-for="item in searchResults.items"
           :key="item.id"
           class="flex flex-row items-center justify-between mt-4 border-b"
+          @click="handleAddTrack(item)"
         >
           <img
             :src="item.album.images[0].url"
@@ -85,15 +52,42 @@
         </li>
       </ul>
     </div>
+    <div class="my-suggested-tracks-container">
+      <h2>As minhas escolhas</h2>
+      <ul>
+        <li
+          v-for="track in suggestedTracks"
+          :key="track.id"
+          class="flex flex-row items-center justify-start mt-4 border-b"
+        >
+          <img
+            :src="track.album.images[0].url"
+            :alt="track.album.name"
+            class="w-24 h-24 rounded-lg !my-4"
+          />
+          <div class="text-left ml-8">
+            <p class="text-sm font-medium text-gray-900">
+              {{ track.name }}
+            </p>
+            <p class="text-sm text-gray-500">{{ track.artists[0].name }}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import SearchSvg from "@/assets/search.svg?component";
+import { useAuth } from "@/composables/useAuth";
 import { useSpotify } from "@/composables/useSpotify";
+import { supabase } from "@/composables/useSupabase";
 import { useDebounceFn } from "@vueuse/core";
 
-const { searchForItem } = useSpotify();
+const { userSession } = useAuth();
+const { searchForItem, getTrack } = useSpotify();
+
+const tracks = ref<UserSongRequest[]>([]);
 const search = ref("");
 const isLoading = ref(false);
 const searchResults = ref({});
@@ -102,7 +96,7 @@ const updateItems = useDebounceFn(async () => {
   isLoading.value = true;
   if (search.value.length >= 3) {
     const results = await searchForItem(search.value);
-    searchResults.value = results;
+    searchResults.value = results.tracks;
     console.log(searchResults.value);
   } else {
     searchResults.value = [];
@@ -122,14 +116,56 @@ const perfomSearch = async () => {
 const searchResultsIsEmpty = computed(
   () => Object.keys(searchResults.value).length === 0
 );
+
+const handleAddTrack = async (track: Track) => {
+  searchResults.value = {};
+  try {
+    const res = await supabase.from("user-song-requests").upsert(
+      {
+        link: track.href,
+        track_id: track.id,
+        user_id: userSession.value?.user.id,
+      },
+      { ignoreDuplicates: true }
+    );
+    if (res.error) throw res.error;
+    tracks.value.push(await getTrack(track.id));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const getTracks = async () => {
+  try {
+    const { data, error } = await supabase
+      .from("user-song-requests")
+      .select("*")
+      .eq("user_id", userSession.value?.user.id);
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const suggestedTracks = computed(() =>
+  tracks.value.sort((a: Track, b: Track) => a.name.localeCompare(b.name))
+);
+
+onMounted(async () => {
+  const tracksFromDB: UserSongRequest[] = await getTracks();
+  tracksFromDB.map(async (track: any) =>
+    tracks.value.push(await getTrack(track.track_id))
+  );
+});
 </script>
 
 <style lang="postcss" scoped>
-.results-container {
-  @apply overflow-hidden bg-white border border-gray-300 rounded-xl mt-4;
+.search-container {
+  @apply relative;
+
+  & .results-container {
+    @apply absolute w-full overflow-hidden bg-white border border-gray-300 rounded-xl mt-4;
+  }
 }
 </style>
- -->
-
-<template></template>
-<script></script>

@@ -41,8 +41,24 @@ export const useSpotify = () => {
       const response = await axios.get(SEARCH_URL, {
         params: {
           q: query,
-          type: "track,album,artist",
+          type: "track",
         },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getTrack = async (id: string) => {
+    const accessToken = await getAccessToken();
+    if (!accessToken) throw new Error("Missing access token");
+    try {
+      const response = await axios.get(`${URL}/tracks/${id}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -56,5 +72,6 @@ export const useSpotify = () => {
 
   return {
     searchForItem,
+    getTrack,
   };
 };

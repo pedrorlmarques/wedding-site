@@ -36,5 +36,6 @@ declare module '@vue/runtime-core' {
     RouterView: typeof import('vue-router')['RouterView']
     SearchForm: typeof import('./src/components/Playlist/SearchForm/index.vue')['default']
     Timer: typeof import('./src/components/Timer/index.vue')['default']
+    Track: typeof import('./src/components/Playlist/Track/index.vue')['default']
   }
 }
