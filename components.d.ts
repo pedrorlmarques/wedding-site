@@ -24,6 +24,7 @@ declare module '@vue/runtime-core' {
     Invitation: typeof import('./src/views/Invitation.vue')['default']
     InvitationForm: typeof import('./src/components/InvitationForm/index.vue')['default']
     Login: typeof import('./src/views/Login.vue')['default']
+    Noivado: typeof import('./src/views/Noivado.vue')['default']
     LoginForm: typeof import('./src/components/LoginForm/index.vue')['default']
     Navigation: typeof import('./src/components/Navigation/index.vue')['default']
     Playlist: typeof import('./src/views/Playlist.vue')['default']
