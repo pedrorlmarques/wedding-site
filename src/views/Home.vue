@@ -16,7 +16,7 @@
 						Adicione as pessoas que vão ao casamento bem como as suas restrições alimentares!
 					</template>
 				</AnchorToPagesButton>
-				<AnchorToPagesButton title="Sessão Noivado" path="/noivado" disabled>
+				<AnchorToPagesButton title="Sessão Noivado" path="/noivado">
 					<template #icon>
 						<HeartSvg />
 					</template>

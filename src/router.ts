@@ -33,6 +33,14 @@ const routes = [
     component: () => import("@/views/Playlist.vue"),
   },
   {
+    path: "/noivado",
+    name: "Noivado",
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import("@/views/Noivado.vue"),
+  },
+  {
     path: "/register",
     name: "Register",
     component: () => import("@/views/Register.vue"),

@@ -154,7 +154,7 @@ const dashboardLinks = ref([
   {
     link: "/noivado",
     label: "Sessão Noivado",
-    disabled: true,
+    disabled: false,
   },
   {
     link: "/playlist",

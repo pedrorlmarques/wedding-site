@@ -27,6 +27,7 @@ declare module '@vue/runtime-core' {
     LoginForm: typeof import('./src/components/LoginForm/index.vue')['default']
     Navigation: typeof import('./src/components/Navigation/index.vue')['default']
     Playlist: typeof import('./src/views/Playlist.vue')['default']
+    Noivado: typeof import('./src/views/Noivado.vue')['default']
     RecoverPassword: typeof import('./src/views/RecoverPassword.vue')['default']
     RecoverPasswordForm: typeof import('./src/components/RecoverPasswordForm/index.vue')['default']
     Register: typeof import('./src/views/Register.vue')['default']
