@@ -124,8 +124,11 @@ const handleAddTrack = async (track: Track) => {
       },
       { ignoreDuplicates: true }
     );
+    if (!res.error && res.status === 201) {
+      toast.success("Música adicionada com sucesso!");
+      tracks.value.push(await getTrack(track.id));
+    }
     if (res.error) throw res.error;
-    tracks.value.push(await getTrack(track.id));
   } catch (error) {
     console.error(error);
   }
