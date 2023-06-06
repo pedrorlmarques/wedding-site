@@ -18,7 +18,11 @@
             alimentares!
           </template>
         </AnchorToPagesButton>
-        <AnchorToPagesButton title="Sessão Noivado" path="/noivado">
+        <AnchorToPagesButton
+          title="Sessão Noivado"
+          href="https://home.mycloud.com/action/share/325d25fe-b184-403e-b388-4f054c6ee7d9"
+          target="_blank"
+        >
           <template #icon>
             <HeartSvg />
           </template>
@@ -27,7 +31,7 @@
             sessão de noivado!
           </template>
         </AnchorToPagesButton>
-        <AnchorToPagesButton title="Playlist" path="/playlist" disabled>
+        <AnchorToPagesButton title="Playlist" path="/playlist">
           <template #icon>
             <DiscoBallSvg />
           </template>
