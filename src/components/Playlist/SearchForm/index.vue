@@ -1,6 +1,6 @@
 <template>
   <div class="search-container">
-    <form>
+    <form ref="searchResultsContainer">
       <label
         for="default-search"
         class="mb-2 text-sm font-medium text-gray-900 sr-only"
@@ -18,12 +18,14 @@
           class="block w-full p-4 pl-10 text-sm text-gray-900 border-b border-secondary-600 bg-transparent !outline-none opacity-50 focus:opacity-100"
           placeholder="Pesquisa por artista, música..."
           v-model="search"
-          @input="perfomSearch()"
+          @click="updateItems"
+          @input="perfomSearch"
           required
         />
         <button
           type="submit"
           class="text-white absolute right-2.5 bottom-2.5 bg-secondary-700 hover:bg-secondary-800 font-medium rounded-lg text-sm px-4 py-2"
+          @keyup.enter="onSubmit"
           @click="onSubmit"
         >
           Pesquisa
@@ -33,7 +35,7 @@
     <div v-if="!searchResultsIsEmpty" class="results-container">
       <ul class="p-8 overflow-y-auto h-96">
         <li
-          v-for="item in searchResults.items"
+          v-for="item in searchResults"
           :key="item.id"
           class="flex flex-row items-center justify-between mt-4 border-b"
           @click="handleAddTrack(item)"
@@ -54,50 +56,44 @@
     </div>
     <div class="my-suggested-tracks-container">
       <h2>As minhas escolhas</h2>
-      <ul>
-        <li
+      <ul class="!pl-0">
+        <Track
           v-for="track in suggestedTracks"
           :key="track.id"
-          class="flex flex-row items-center justify-start mt-4 border-b"
-        >
-          <img
-            :src="track.album.images[0].url"
-            :alt="track.album.name"
-            class="w-24 h-24 rounded-lg !my-4"
-          />
-          <div class="text-left ml-8">
-            <p class="text-sm font-medium text-gray-900">
-              {{ track.name }}
-            </p>
-            <p class="text-sm text-gray-500">{{ track.artists[0].name }}</p>
-          </div>
-        </li>
+          :track="track"
+          @delete="deleteTrack"
+        />
       </ul>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, computed, onMounted } from "vue";
+import { onClickOutside } from "@vueuse/core";
+
 import SearchSvg from "@/assets/search.svg?component";
 import { useAuth } from "@/composables/useAuth";
 import { useSpotify } from "@/composables/useSpotify";
 import { supabase } from "@/composables/useSupabase";
 import { useDebounceFn } from "@vueuse/core";
+import { useToast } from "vue-toastification";
 
 const { userSession } = useAuth();
 const { searchForItem, getTrack } = useSpotify();
+const toast = useToast();
 
-const tracks = ref<UserSongRequest[]>([]);
-const search = ref("");
+const tracks = ref<Track[]>([]);
+const search = ref<string>("");
+const searchResultsContainer = ref(null);
 const isLoading = ref(false);
-const searchResults = ref({});
+const searchResults = ref<any>([]);
 
 const updateItems = useDebounceFn(async () => {
   isLoading.value = true;
-  if (search.value.length >= 3) {
+  if (search.value && search.value.length >= 3) {
     const results = await searchForItem(search.value);
-    searchResults.value = results.tracks;
-    console.log(searchResults.value);
+    searchResults.value = results!.tracks!.items;
   } else {
     searchResults.value = [];
   }
@@ -118,7 +114,7 @@ const searchResultsIsEmpty = computed(
 );
 
 const handleAddTrack = async (track: Track) => {
-  searchResults.value = {};
+  searchResults.value = [];
   try {
     const res = await supabase.from("user-song-requests").upsert(
       {
@@ -135,26 +131,46 @@ const handleAddTrack = async (track: Track) => {
   }
 };
 
-const getTracks = async () => {
+const getTracks = async (): Promise<UserSongRequest[] | undefined> => {
   try {
     const { data, error } = await supabase
       .from("user-song-requests")
       .select("*")
       .eq("user_id", userSession.value?.user.id);
     if (error) throw error;
-    return data;
+    return data as UserSongRequest[];
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const deleteTrack = async (id: string) => {
+  try {
+    const { error, status } = await supabase
+      .from("user-song-requests")
+      .delete()
+      .eq("track_id", id);
+    if (!error && status === 204) {
+      tracks.value = tracks.value.filter((track) => track.id !== id);
+      toast.success("Música removida com sucesso!");
+    }
+    if (error) throw error;
   } catch (error) {
     console.error(error);
   }
 };
 
 const suggestedTracks = computed(() =>
-  tracks.value.sort((a: Track, b: Track) => a.name.localeCompare(b.name))
+  tracks.value.sort((a, b) => a.name.localeCompare(b.name))
 );
 
+onClickOutside(searchResultsContainer, () => {
+  searchResults.value = [];
+});
+
 onMounted(async () => {
-  const tracksFromDB: UserSongRequest[] = await getTracks();
-  tracksFromDB.map(async (track: any) =>
+  const tracksFromDB = await getTracks();
+  tracksFromDB?.map(async (track: any) =>
     tracks.value.push(await getTrack(track.track_id))
   );
 });
@@ -165,7 +181,7 @@ onMounted(async () => {
   @apply relative;
 
   & .results-container {
-    @apply absolute w-full overflow-hidden bg-white border border-gray-300 rounded-xl mt-4;
+    @apply absolute w-full overflow-hidden bg-white border border-gray-300 rounded-xl mt-4 z-10;
   }
 }
 </style>

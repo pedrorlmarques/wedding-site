@@ -34,7 +34,9 @@ export const useSpotify = () => {
     }
   };
 
-  const searchForItem = async (query: string) => {
+  const searchForItem = async (
+    query: string
+  ): Promise<SpotifySearchResult | undefined> => {
     const accessToken = await getAccessToken();
     if (!accessToken) throw new Error("Missing access token");
     try {
@@ -47,8 +49,7 @@ export const useSpotify = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-
-      return response.data;
+      return (response.data as SpotifySearchResult) || null;
     } catch (error) {
       console.error(error);
     }

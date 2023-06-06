@@ -65,3 +65,15 @@ declare interface UserSongRequest {
   track_id: string;
   user_id: string;
 }
+
+declare interface SpotifySearchResult {
+  tracks: {
+    href: string;
+    items?: Track[];
+    limit: number;
+    next: string | null;
+    offset: number;
+    previous: string | null;
+    total: number;
+  };
+}
