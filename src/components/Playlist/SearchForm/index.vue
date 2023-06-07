@@ -123,7 +123,7 @@
 			);
 			if (!res.error && res.status === 201) {
 				toast.success('Música adicionada com sucesso!');
-				tracks.value.push(await getTrack(track.id));
+				tracks.value.push({ ...(await getTrack(track.id)), status: 'PENDING' });
 			}
 			if (res.error) throw res.error;
 		} catch (error) {
