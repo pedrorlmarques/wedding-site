@@ -20,7 +20,7 @@
 				>
 			</p>
 		</div>
-		<div class="text-right ml-auto">
+		<div class="text-right ml-auto mr-8" v-if="track.status !== 'APPROVED'">
 			<button type="button" @click="emit('delete', track.id)">
 				<CancelSVG class="cancel-svg w-8 h-8 opacity-30 hover:opacity-100" />
 			</button>
