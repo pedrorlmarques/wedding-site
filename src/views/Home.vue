@@ -1,57 +1,64 @@
 <template>
-	<HomeLayout>
-		<div class="container mx-auto px-2 sm:px-32">
-			<div class="hr-heart">
-				<span class="first-line"></span>
-				<HeartSvg />
-				<span class="second-line"></span>
-			</div>
-			<div
-				class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mx-8 sm:mx-0">
-				<AnchorToPagesButton title="Convite" path="/convite">
-					<template #icon>
-						<WeddingInvitationSvg />
-					</template>
-					<template #description>
-						Adicione as pessoas que vão ao casamento bem como as suas restrições alimentares!
-					</template>
-				</AnchorToPagesButton>
-				<AnchorToPagesButton title="Sessão Noivado" path="/noivado">
-					<template #icon>
-						<HeartSvg />
-					</template>
-					<template #description>
-						Os noivos tornaram-se modelos por um dia? Veja as fotografias da sessão de noivado!
-					</template>
-				</AnchorToPagesButton>
-				<AnchorToPagesButton title="Playlist" path="/playlist-disable-workaround" disabled>
-					<template #icon>
-						<DiscoBallSvg />
-					</template>
-					<template #description>
-						Conhece bem os noivos e sabe quais são os seus gostos? Muito bem,
-						então sugira as melhores músicas nesta fantástica Playlist!
-					</template>
-				</AnchorToPagesButton>
-				<AnchorToPagesButton title="Fotografias" path="/fotos" disabled>
-					<template #icon>
-						<CameraSvg />
-					</template>
-					<template #description>
-						Faça upload das várias fotografias que vai tirar no nosso casamento!
-					</template>
-				</AnchorToPagesButton>
-				<AnchorToPagesButton title="Menu" path="/menu" disabled>
-					<template #icon>
-						<ForkAndSpoonSvg />
-					</template>
-					<template #description>
-						Não sabe o Menu? Aqui pode ver em detalhe!
-					</template>
-				</AnchorToPagesButton>
-			</div>
-		</div>
-	</HomeLayout>
+  <HomeLayout>
+    <div class="container mx-auto px-2 sm:px-32">
+      <div class="hr-heart">
+        <span class="first-line"></span>
+        <HeartSvg />
+        <span class="second-line"></span>
+      </div>
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mx-8 sm:mx-0"
+      >
+        <AnchorToPagesButton title="Convite" path="/convite">
+          <template #icon>
+            <WeddingInvitationSvg />
+          </template>
+          <template #description>
+            Adicione as pessoas que vão ao casamento bem como as suas restrições
+            alimentares!
+          </template>
+        </AnchorToPagesButton>
+        <AnchorToPagesButton
+          title="Sessão Noivado"
+          href="https://home.mycloud.com/action/share/325d25fe-b184-403e-b388-4f054c6ee7d9"
+          target="_blank"
+        >
+          <template #icon>
+            <HeartSvg />
+          </template>
+          <template #description>
+            Os noivos tornaram-se modelos por um dia? Veja as fotografias da
+            sessão de noivado!
+          </template>
+        </AnchorToPagesButton>
+        <AnchorToPagesButton title="Playlist" path="/playlist">
+          <template #icon>
+            <DiscoBallSvg />
+          </template>
+          <template #description>
+            Conhece bem os noivos e sabe quais são os seus gostos? Muito bem,
+            então sugira as melhores músicas nesta fantástica Playlist!
+          </template>
+        </AnchorToPagesButton>
+        <AnchorToPagesButton title="Fotografias" path="/fotos" disabled>
+          <template #icon>
+            <CameraSvg />
+          </template>
+          <template #description>
+            Faça upload das várias fotografias que vai tirar no nosso casamento!
+          </template>
+        </AnchorToPagesButton>
+        <AnchorToPagesButton title="Menu" path="/menu" disabled>
+          <template #icon>
+            <ForkAndSpoonSvg />
+          </template>
+          <template #description>
+            Não sabe o Menu? Aqui pode ver em detalhe!
+          </template>
+        </AnchorToPagesButton>
+      </div>
+    </div>
+  </HomeLayout>
 </template>
 
 <script setup>

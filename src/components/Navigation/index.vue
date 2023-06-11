@@ -1,38 +1,39 @@
 <template>
-	<nav class="bg-transparent px-2 sm:px-4 py-2.5 w-full" ref="nav">
-		<div
-			class="container flex flex-wrap md:flex-nowrap items-center justify-end mx-auto">
-			<div class="flex items-center md:order-2 relative">
-				<button
-					type="button"
-					class="btn-menu"
-					id="user-menu-button"
-					@click="toggleMenu()"
-					:aria-expanded="openMenu">
-					<span class="sr-only">Open user menu</span>
-					<UserSvg
-						v-if="!user?.user_metadata.avatar_url"
-						class="user-icon"
-						alt="user photo" />
-					<img
-						v-else
-						:src="user?.user_metadata.avatar_url"
-						class="user-icon"
-						alt="user photo" />
+  <nav class="bg-transparent px-2 sm:px-4 py-2.5 w-full" ref="nav">
+    <div
+      class="container flex flex-wrap md:flex-nowrap items-center justify-end mx-auto"
+    >
+      <div class="flex items-center md:order-2 relative">
+        <button
+          type="button"
+          class="btn-menu"
+          id="user-menu-button"
+          @click="toggleMenu()"
+          :aria-expanded="openMenu"
+        >
+          <span class="sr-only">Open user menu</span>
+          <UserSvg v-if="!user?.user_metadata.avatar_url" class="user-icon" />
+          <img
+            v-else
+            :src="user?.user_metadata.avatar_url"
+            class="user-icon"
+            alt="user photo"
+          />
 
-					<ArrowSvg class="arrow-icon" :class="openMenu ? 'rotate-180' : ''" />
-				</button>
+          <ArrowSvg class="arrow-icon" :class="openMenu ? 'rotate-180' : ''" />
+        </button>
 
-				<!-- Dropdown menu -->
-				<div
-					v-if="openMenu"
-					class="absolute top-8 right-0 z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow"
-					ref="menu"
-					id="user-dropdown">
-					<div class="px-4 py-3">
-						<span class="block text-sm text-gray-900 whitespace-nowrap">{{
-							user?.user_metadata.name || user?.user_metadata.full_name
-						}}</span>
+        <!-- Dropdown menu -->
+        <div
+          v-if="openMenu"
+          class="absolute top-8 right-0 z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow"
+          ref="menu"
+          id="user-dropdown"
+        >
+          <div class="px-4 py-3">
+            <span class="block text-sm text-gray-900 whitespace-nowrap">{{
+              user?.user_metadata.name || user?.user_metadata.full_name
+            }}</span>
 
             <span
               class="block text-sm font-medium text-gray-500 truncate whitespace-nowrap"
@@ -70,10 +71,11 @@
         >
           <li
             class="relative nav-link"
-            v-for="(page, pageIndex) in dashboardLinks"
+            v-for="page in dashboardLinks"
             :disabled="page.disabled"
           >
             <router-link
+              v-if="page.link"
               custom
               :to="page.link"
               v-slot="{ href, isActive, isExactActive, navigate }"
@@ -101,6 +103,16 @@
                 />
               </a>
             </router-link>
+            <a
+              v-else
+              :href="page.href"
+              :target="page.target"
+              class="relative flex items-center justify-between py-2 pl-3 pr-4 stroke-black rounded hover:bg-primary-200 md:hover:bg-transparent md:hover:text-primary-600 md:p-0"
+              :disabled="page.disabled"
+            >
+              {{ page.label }}
+              <HeartSvg />
+            </a>
           </li>
         </ul>
       </div>
@@ -108,58 +120,55 @@
   </nav>
 </template>
 <script setup lang="ts">
-	import { ref, computed } from 'vue';
-	import { onClickOutside, useWindowSize } from '@vueuse/core';
+import { ref, computed } from "vue";
+import { onClickOutside, useWindowSize } from "@vueuse/core";
 
-	import HeartSvg from '@assets/heart.svg?component';
-	import MenuSvg from '@assets/menu.svg?component';
-	import UserSvg from '@assets/user.svg?component';
-	import ArrowSvg from '@assets/arrow-down-up.svg?component';
+import HeartSvg from "@assets/heart.svg?component";
+import MenuSvg from "@assets/menu.svg?component";
+import UserSvg from "@assets/user.svg?component";
+import ArrowSvg from "@assets/arrow-down-up.svg?component";
 
-	import { useAuth } from '@/composables/useAuth';
-	import { useRouter } from 'vue-router';
+import { useAuth } from "@/composables/useAuth";
+import { useRouter } from "vue-router";
 
-	defineProps({
-		withNavigation: {
-			type: Boolean,
-			default: false,
-		},
-	});
+defineProps({
+  withNavigation: {
+    type: Boolean,
+    default: false,
+  },
+});
 
-	const { width: windowWidth } = useWindowSize();
+const { width: windowWidth } = useWindowSize();
 
-	const nav = ref(null);
-	const menu = ref(null);
-	const openMenu = ref(false);
-	const mainMenu = ref(null);
-	const openMainMenu = ref(false);
+const nav = ref(null);
+const menu = ref(null);
+const openMenu = ref(false);
+const mainMenu = ref(null);
+const openMainMenu = ref(false);
 
-	const router = useRouter();
-	const { userSession, handleLogout } = useAuth();
+const router = useRouter();
+const { userSession, handleLogout } = useAuth();
 
-	const user = computed(() => userSession.value?.user);
-	const isDesktop = computed(() => windowWidth.value >= 768);
+const user = computed(() => userSession.value?.user);
+const isDesktop = computed(() => windowWidth.value >= 768);
 
 const dashboardLinks = ref([
   {
     link: "/",
     label: "Home",
-    disabled: false,
   },
   {
     link: "/convite",
     label: "Convite",
-    disabled: false,
   },
   {
-    link: "/noivado",
     label: "Sessão Noivado",
-    disabled: false,
+    href: "https://home.mycloud.com/action/share/325d25fe-b184-403e-b388-4f054c6ee7d9",
+    target: "_blank",
   },
   {
     link: "/playlist",
     label: "Playlist",
-    disabled: true,
   },
   {
     link: "/fotografias",
@@ -173,46 +182,43 @@ const dashboardLinks = ref([
   },
 ]);
 
-	onClickOutside(menu, () => (openMenu.value = false));
-	onClickOutside(
-		mainMenu,
-		() => isDesktop.value && (openMainMenu.value = false)
-	);
+onClickOutside(menu, () => (openMenu.value = false));
+onClickOutside(mainMenu, () => isDesktop.value && (openMainMenu.value = false));
 
-	const toggleMenu = () => (openMenu.value = !openMenu.value);
+const toggleMenu = () => (openMenu.value = !openMenu.value);
 
-	const toggleMainMenu = () => (openMainMenu.value = !openMainMenu.value);
+const toggleMainMenu = () => (openMainMenu.value = !openMainMenu.value);
 
-	const logout = async () => {
-		await handleLogout();
-		router.push({ name: 'Login' });
-	};
+const logout = async () => {
+  await handleLogout();
+  router.push({ name: "Login" });
+};
 </script>
 <style lang="postcss" scoped>
-	button[type='button'].btn-menu {
-		@apply flex items-center text-sm bg-transparent rounded-full md:mr-0 shadow-none p-0.5 hover:opacity-50 hover:bg-transparent;
+button[type="button"].btn-menu {
+  @apply flex items-center text-sm bg-transparent rounded-full md:mr-0 shadow-none p-0.5 hover:opacity-50 hover:bg-transparent;
 
-		& svg,
-		& img {
-			&.user-icon {
-				@apply w-10 h-10 rounded-full mr-2;
-			}
+  & svg,
+  & img {
+    &.user-icon {
+      @apply w-10 h-10 rounded-full mr-2;
+    }
 
-			&.arrow-icon {
-				@apply w-8 h-8 text-black;
-			}
-		}
-	}
+    &.arrow-icon {
+      @apply w-8 h-8 text-black;
+    }
+  }
+}
 
-	.nav-link {
-		& svg {
-			@apply ml-2 w-4 h-4 stroke-[3px];
-		}
+.nav-link {
+  & svg {
+    @apply ml-2 w-4 h-4 stroke-[3px];
+  }
 
-		&[disabled='true'] {
-			& svg {
-				@apply text-gray-400 stroke-gray-400;
-			}
-		}
-	}
+  &[disabled="true"] {
+    & svg {
+      @apply text-gray-400 stroke-gray-400;
+    }
+  }
+}
 </style>

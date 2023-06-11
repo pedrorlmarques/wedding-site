@@ -159,6 +159,10 @@ const editedGuest = (guest: Guest) => {
 };
 
 const cancelGuest = (guest: Guest) => {
+  invitedPerson.value.guests.splice(
+    invitedPerson.value.guests.indexOf(guest),
+    1
+  );
   guest.added = true;
 };
 
@@ -232,7 +236,7 @@ onMounted(async () => {
 });
 </script>
 
-<styles lang="postcss" scoped>
+<style lang="postcss" scoped>
 form {
   @apply flex flex-col items-center w-full mx-auto space-y-4;
 
@@ -268,40 +272,9 @@ h1 {
   }
 }
 
-div.accordion {
-  @apply w-full;
-  &&& h2 {
-    @apply m-0 p-0;
-
-    &:last-of-type {
-      @apply mb-4;
-    }
-  }
-}
-
-.restrictions--wrapper {
-  @apply p-0 px-4 text-left;
-
-  &&& .restrictions--description {
-    @apply mt-4 pb-4 text-gray-500;
-  }
-}
-
 button[type="button"],
 button[type="submit"] {
   @apply px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg shadow-md hover:bg-primary-700 m-0;
-
-  &[disabled] {
-    @apply bg-primary-100 cursor-not-allowed;
-  }
-
-  &.add-new-guest-btn {
-    @apply w-full rounded-none shadow-none bg-transparent;
-  }
-
-  &.accordion-btn {
-    @apply w-full flex justify-between rounded-none bg-transparent shadow-transparent text-secondary-600 hover:bg-secondary-50 border-b-secondary-200 border-b;
-  }
 
   &.send-btn {
     @apply w-full rounded-none shadow-none bg-secondary-500 hover:bg-secondary-600;
@@ -311,75 +284,14 @@ button[type="submit"] {
     }
   }
 
-  & svg.plus-svg {
-    @apply w-6 h-6 mx-auto;
+  &.add-new-guest-btn {
+    @apply w-full rounded-none shadow-none bg-transparent;
 
-    & .st0 {
-      @apply fill-black;
-    }
-  }
-
-  &&&.edit-btn,
-  &&&.remove-btn,
-  &&&.arrow-btn {
-    @apply w-6 h-6 bg-transparent shadow-none hover:opacity-50 mx-1 my-0 p-0;
-
-    & svg {
-      @apply w-6 h-6 text-secondary-500 mx-auto;
-
-      & path {
-        @apply stroke-secondary-500;
-      }
-    }
-
-    &:last-of-type {
-      @apply mr-0;
-    }
-  }
-
-  &&&&.edit-btn {
-    & svg {
-      @apply fill-secondary-500;
-    }
-    & path {
-      @apply stroke-none;
-    }
-  }
-
-  &&&&.remove-btn {
-    & svg {
-      @apply h-5 w-5;
-    }
-  }
-
-  &&&.cancel-guest-btn {
-    @apply w-full rounded-none bg-red-600 mt-0 shadow-none;
-
-    &[disabled] {
-      @apply bg-red-200 cursor-not-allowed;
-    }
-
-    & .cancel-svg {
+    & svg.plus-svg {
       @apply w-6 h-6 mx-auto;
 
-      & path {
-        @apply fill-white;
-      }
-    }
-  }
-
-  &&&.add-guest-btn {
-    @apply w-full rounded-none bg-primary-600 mt-0 shadow-none;
-
-    &[disabled] {
-      @apply bg-primary-200 cursor-not-allowed;
-    }
-
-    & .check-svg {
-      @apply w-6 h-6 mx-auto;
-
-      & path {
-        @apply stroke-white;
+      & .st0 {
+        @apply fill-black;
       }
     }
   }
@@ -400,4 +312,4 @@ div.alert {
     }
   }
 }
-</styles>
+</style>
