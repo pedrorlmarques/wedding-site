@@ -28,7 +28,7 @@
           @keyup.enter="onSubmit"
           @click="onSubmit"
         >
-          Pesquisa
+          Pesquisar
         </button>
       </div>
     </form>
