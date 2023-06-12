@@ -105,7 +105,7 @@ const onSubmit = (e: Event) => {
 };
 
 const perfomSearch = async () => {
-  updateItems();
+  await updateItems();
 };
 
 const searchResultsIsEmpty = computed(
@@ -119,6 +119,7 @@ const handleAddTrack = async (track: Track) => {
       {
         link: track.external_urls.spotify,
         track_id: track.id,
+        track_uri: track.uri,
         user_id: userSession.value?.user.id,
         user_name:
           userSession.value?.user.user_metadata.name ||
