@@ -117,7 +117,7 @@ const handleAddTrack = async (track: Track) => {
   try {
     const res = await supabase.from("user-song-requests").upsert(
       {
-        link: track.href,
+        link: track.external_urls.spotify,
         track_id: track.id,
         user_id: userSession.value?.user.id,
         user_name:
