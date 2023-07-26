@@ -21,8 +21,7 @@
         <AnchorToPagesButton
           title="Sessão Noivado"
           href="https://home.mycloud.com/action/share/325d25fe-b184-403e-b388-4f054c6ee7d9"
-          target="_blank"
-        >
+          target="_blank">
           <template #icon>
             <HeartSvg />
           </template>
@@ -56,6 +55,19 @@
             Não sabe o Menu? Aqui pode ver em detalhe!
           </template>
         </AnchorToPagesButton>
+        <AnchorToPagesButton title="Prenda"
+                             href="https://zgymwxdubdiijrxkdttl.supabase.co/storage/v1/object/public/img/comprovativoIBAN.pdf?t=2023-07-26T07%3A53%3A25.237Z"
+                             target="_blank"
+        >
+          <template #icon>
+            <GiftSvg />
+          </template>
+          <template #description>
+            O melhor presente que nos podem dar é estarem presentes!
+            <br>
+            No entanto, se tiverem a intenção de nos oferecer uma ajuda deixamos o nosso Iban
+          </template>
+        </AnchorToPagesButton>
       </div>
     </div>
   </HomeLayout>
@@ -67,6 +79,7 @@ import HeartSvg from "@/assets/heart.svg?component";
 import CameraSvg from "@/assets/camera.svg?component";
 import DiscoBallSvg from "@/assets/disco-ball.svg?component";
 import ForkAndSpoonSvg from "@/assets/fork-and-spoon.svg?component";
+import GiftSvg from "@/assets/gift.svg?component";
 </script>
 
 <style scoped lang="postcss">
