@@ -11,6 +11,7 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AnchorToPagesButton: typeof import('./src/components/AnchorToPagesButton/index.vue')['default']
     App: typeof import('./src/App.vue')['default']
+    CommunityPhotos: typeof import('./src/views/CommunityPhotos.vue')['default']
     Dashboard: typeof import('./src/layout/Dashboard.vue')['default']
     Default: typeof import('./src/layout/Default.vue')['default']
     EmailConfirmation: typeof import('./src/views/EmailConfirmation.vue')['default']
@@ -34,7 +35,9 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SearchForm: typeof import('./src/components/Playlist/SearchForm/index.vue')['default']
+    Timeline: typeof import('./src/components/CommunityPhotos/Timeline/index.vue')['default']
     Timer: typeof import('./src/components/Timer/index.vue')['default']
     Track: typeof import('./src/components/Playlist/Track/index.vue')['default']
+    UserNavigation: typeof import('./src/components/CommunityPhotos/UserNavigation/index.vue')['default']
   }
 }
