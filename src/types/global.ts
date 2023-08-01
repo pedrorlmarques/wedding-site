@@ -40,13 +40,13 @@ declare interface InvitedPerson {
 
 declare interface IPublication {
 	id: number;
-	data: {
-		path: string;
-		userId: string;
-		uploadedAt: string;
-		publication: string;
-		type: string;
-	};
+	created_at: string;
+	title: string;
+	user_name: string;
 	user_id: string;
-	uploadedAt: string;
+	comments: {};
+	files: {
+		path: string;
+		type: string;
+	}[];
 }

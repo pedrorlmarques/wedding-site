@@ -1,6 +1,13 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 dependencies:
+  '@fancyapps/ui':
+    specifier: ^5.0.20
+    version: 5.0.20
   '@formkit/core':
     specifier: 0.16.4
     version: 0.16.4
@@ -19,6 +26,9 @@ dependencies:
   dayjs:
     specifier: ^1.11.9
     version: 1.11.9
+  uuid:
+    specifier: ^9.0.0
+    version: 9.0.0
   vee-validate:
     specifier: 4.8.4
     version: 4.8.4(vue@3.2.47)
@@ -332,6 +342,10 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@fancyapps/ui@5.0.20:
+    resolution: {integrity: sha512-g7go/W0mIplnpVCWNm6uHF6VZeDSAJnPHzx0bxyETfzyYqtwpv0LpNYP8TbWqFELvXdXwNkQwHvHxkI9FvGlqQ==}
+    dev: false
 
   /@formkit/core@0.16.4:
     resolution: {integrity: sha512-SJGadBfRx3L8VxbgIxV1tiDk8u8eisG1vaKUkFWxBRBfiDGYD25CVKz/k6JrxiPsxz96DgeycnRYSzLvZEeORQ==}
@@ -1870,6 +1884,11 @@ packages:
     dependencies:
       inherits: 2.0.3
     dev: true
+
+  /uuid@9.0.0:
+    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
+    hasBin: true
+    dev: false
 
   /vee-validate@4.8.4(vue@3.2.47):
     resolution: {integrity: sha512-wlLBy50t4EMEin5oqxS2mxpqW02TkIsk0H3LcivLztNJKKLW17hpPSQtQnn8wjDLoWWZ/CVOfep6aw77aCAavg==}
