@@ -1,37 +1,14 @@
 <template>
 	<div
-		v-if="haveSuccededOnUpload"
-		class="flex items-center p-4 mb-4 text-white rounded-lg bg-green-500 border border-500">
-		<div class="ml-3 text-sm font-medium">Post publicado com sucesso!</div>
-		<button
-			type="button"
-			@click="haveSuccededOnUpload = false"
-			class="ml-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8"
-			aria-label="Close">
-			<span class="sr-only">Close</span>
-			<svg
-				class="w-3 h-3"
-				aria-hidden="true"
-				xmlns="http://www.w3.org/2000/svg"
-				fill="none"
-				viewBox="0 0 14 14">
-				<path
-					stroke="currentColor"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-			</svg>
-		</button>
-	</div>
-	<div
 		class="border border-gray-200 rounded-lg shadow mb-4 mx-4 md:mx-0 p-8 bg-white">
 		<div class="flex items-center">
 			<div class="overflow-hidden">
 				<img
+					v-if="user?.user_metadata.avatar_url"
 					class="w-10 rounded-full"
 					:src="user?.user_metadata.avatar_url"
 					alt="user photo" />
+				<UserSvg v-else class="user-icon" />
 			</div>
 			<textarea
 				class="col-span-5 mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 resize-none overflow-hidden"
@@ -40,7 +17,9 @@
 				v-model="userPostText"
 				placeholder="O que vês no casamento? Partilha com os noivos..." />
 		</div>
-		<ul v-if="imageData" class="flex flex-1 flex-wrap ml-14 mt-4">
+		<ul
+			v-show="imageData && imageData.length > 0"
+			class="flex flex-1 flex-wrap ml-14 mt-4">
 			<li
 				class="block p-1 w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/6 xl:w-1/8 h-24"
 				v-for="image in imageData"
@@ -89,7 +68,9 @@
 				</article>
 			</li>
 		</ul>
-		<ul v-if="videoData" class="flex flex-1 flex-wrap ml-14 mt-4">
+		<ul
+			v-show="videoData && videoData.length > 0"
+			class="flex flex-1 flex-wrap ml-14 mt-4">
 			<li
 				class="block p-1 w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/6 xl:w-1/8 h-24"
 				v-for="video in videoData"
@@ -261,25 +242,55 @@
 				:key="publication.id"
 				class="mt-4 bg-white rounded-xl shadow-lg border border-gray-200 p-8">
 				<article class="prose-sm">
-					<p class="text-gray-400">
-						Publicado em
-						{{ formatPublicationDate(publication.data.uploadedAt) }}
-					</p>
-					<div v-if="publication.data.publication">
-						{{ publication.data.publication }}
+					<div class="flex justify-between mb-8 items-center">
+						<div class="flex items-center">
+							<UserSvg class="w-8 h-8 mr-4" />
+							<span>
+								<strong>{{ publication.user_name }}</strong>
+								<p class="text-gray-400 my-0">
+									Publicado em
+									{{ formatPublicationDate(publication.created_at) }}
+								</p>
+							</span>
+						</div>
+						<div v-show="publication.user_id === userSession?.user.id">
+							<button
+								class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2"
+								@click="deletePublication(publication)">
+								Apagar publicação
+							</button>
+						</div>
 					</div>
-					<template v-if="publication.data.type.startsWith('image')">
-						<img
-							class="h-auto max-w-full rounded-lg mx-auto"
-							:src="publication.data.path" />
-					</template>
-					<template v-if="publication.data.type.startsWith('video')">
-						<video class="w-full h-auto max-w-full" controls>
-							<source
-								:src="publication.data.path"
-								:type="publication.data.type" />
-						</video>
-					</template>
+					<div v-if="publication.title">
+						{{ publication.title }}
+					</div>
+
+					<FancyBox
+						:options="{
+							Carousel: {
+								adaptiveHeight: false,
+								infinite: false,
+							},
+						}"
+						class="grid grid-cols-2 md:grid-cols-3 gap-4">
+						<div v-for="(file, index) in publication.files" :key="index">
+							<template v-if="file.type.startsWith('image')">
+								<img
+									data-fancybox="gallery"
+									class="h-auto max-w-full rounded-lg"
+									:alt="file.path"
+									:src="`${file.path}&width=200&height=200`" />
+							</template>
+							<template v-if="file.type.startsWith('video')">
+								<video
+									class="h-auto max-w-full rounded-lg"
+									controls
+									data-fancybox="video">
+									<source :src="file.path" :type="file.type" />
+								</video>
+							</template>
+						</div>
+					</FancyBox>
 				</article>
 			</li>
 		</ul>
@@ -295,13 +306,22 @@
 
 <script setup lang="ts">
 	import { onMounted, computed, ref } from 'vue';
+	import { useToast } from 'vue-toastification';
+
 	import dayjs from 'dayjs';
 	import 'dayjs/locale/pt';
 	import localizedFormat from 'dayjs/plugin/localizedFormat';
+	import '@fancyapps/ui';
+
 	import { useAuth } from '@/composables/useAuth';
 	import { useSupabase } from '@/composables/useSupabase';
+	import FancyBox from '@/components/CommunityPhotos/FancyBox/index.vue';
+
+	import UserSvg from '@assets/user.svg?component';
 
 	dayjs.extend(localizedFormat);
+
+	const bucketName = 'communityPhotos';
 
 	interface IFileUpload {
 		id: number;
@@ -312,6 +332,7 @@
 	}
 
 	const { userSession } = useAuth();
+	const toast = useToast();
 	const { supabase } = useSupabase();
 
 	const isLoadingUpload = ref(false);
@@ -322,7 +343,7 @@
 
 	const publications = ref<IPublication[]>([]);
 
-	const haveSuccededOnUpload = ref(false);
+	const container = ref(null);
 
 	const user = computed(() => userSession.value?.user);
 
@@ -388,81 +409,62 @@
 		videoData.value = videoData.value.filter((video) => video.id !== id);
 	};
 
-	const onSubmit = () => {
-		const bucketName = 'communityPhotos';
-		const now = new Date().toISOString().split('-').join('-');
+	const onSubmit = async () => {
+		const now = dayjs().format();
 
-		haveSuccededOnUpload.value = false;
+		const publicationData = ref([...imageData.value, ...videoData.value]);
 
-		imageData.value.map(async ({ file, name, id: imageId }) => {
-			isLoadingUpload.value = true;
-			const fileName = name.replace(/[^\A-Za-z0-9._-]/g, '');
-			const { data, error } = await supabase.storage
-				.from(bucketName)
-				.upload(
-					`images/${now}_${userSession.value?.user.id}_${fileName}`,
-					file
-				);
+		isLoadingUpload.value = true;
 
-			if (!error) {
-				const { status } = await supabase.from('community').insert({
-					data: {
-						userId: userSession.value?.user.id,
-						publication: userPostText.value,
-						uploadedAt: now,
-						path: `${
-							import.meta.env.VITE_SUPABASE_URL
-						}/storage/v1/object/public/${bucketName}/${data.path}`,
-						type: file.type,
-					},
-					user_id: userSession.value?.user.id,
-					uploadedAt: dayjs(),
-				});
+		const uploadFileToBucket = await Promise.all(
+			publicationData.value.map(async ({ file, name }) => {
+				const fileName = name.replace(/[^\A-Za-z0-9._-]/g, '');
+				const { data, error } = await supabase.storage
+					.from(bucketName)
+					.upload(`${now}_${userSession.value?.user.id}_${fileName}`, file);
 
-				if (status === 201) {
-					haveSuccededOnUpload.value = true;
-					isLoadingUpload.value = false;
-					userPostText.value = '';
-					deleteImage(imageId);
-					fetchPublications();
+				if (!error) {
+					const { data: fileData } = await supabase.storage
+						.from(bucketName)
+						.createSignedUrl(data.path, 60 * 60 * 24 * 365);
+
+					return { path: fileData?.signedUrl as string, type: file.type };
 				}
-			}
-		});
+			})
+		);
 
-		videoData.value.map(async ({ file, name, id: videoId }) => {
-			isLoadingUpload.value = true;
-			const fileName = name.replace(/[^\A-Za-z0-9._-]/g, '');
-			const { data, error } = await supabase.storage
+		if (uploadFileToBucket != null) {
+			const { status } = await supabase.from('publications').insert({
+				user_name: userSession.value?.user.user_metadata.name,
+				comments: {},
+				title: userPostText.value,
+				files: uploadFileToBucket,
+				user_id: userSession.value?.user.id,
+			});
+
+			if (status === 201) {
+				isLoadingUpload.value = false;
+				userPostText.value = '';
+				imageData.value = [];
+				videoData.value = [];
+				toast.success('Publicação enviada com sucesso!');
+				fetchPublications();
+			}
+		}
+	};
+
+	const deletePublication = async (publication: IPublication) => {
+		if (publication.files.length) {
+			await supabase.storage
 				.from(bucketName)
-				.upload(
-					`videos/${now}_${userSession.value?.user.id}_${fileName}`,
-					file
-				);
+				.remove(publication.files.map((file) => file.path));
+		}
 
-			if (!error) {
-				const { status } = await supabase.from('community').insert({
-					data: {
-						userId: userSession.value?.user.id,
-						publication: userPostText.value,
-						uploadedAt: now,
-						path: `${
-							import.meta.env.VITE_SUPABASE_URL
-						}/storage/v1/object/public/${bucketName}/${data.path}`,
-						type: file.type,
-					},
-					user_id: userSession.value?.user.id,
-					uploadedAt: dayjs(),
-				});
+		await supabase.from('publications').delete().eq('id', publication.id);
 
-				if (status === 201) {
-					haveSuccededOnUpload.value = true;
-					isLoadingUpload.value = false;
-					userPostText.value = '';
-					deleteVideo(videoId);
-					fetchPublications();
-				}
-			}
-		});
+		toast.success('Apagado com sucesso!');
+
+		fetchPublications();
 	};
 
 	const formatPublicationDate = (date: string) => {
@@ -471,11 +473,9 @@
 
 	const fetchPublications = async () => {
 		const { data } = await supabase
-			.from('community')
+			.from('publications')
 			.select('*')
-			.order('uploadedAt', {
-				ascending: false,
-			});
+			.order('created_at', { ascending: false });
 
 		if (data) publications.value = data;
 	};
@@ -491,5 +491,11 @@
 	}
 	.hasImage:hover button:hover {
 		background: rgba(5, 5, 5, 0.45);
+	}
+
+	div.img-gallery {
+		&:after {
+			@apply basis-96 content-none;
+		}
 	}
 </style>
