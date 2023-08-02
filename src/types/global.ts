@@ -47,6 +47,7 @@ declare interface IPublication {
 	comments: {};
 	files: {
 		path: string;
+		name: string;
 		type: string;
 	}[];
 }
