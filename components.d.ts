@@ -23,7 +23,6 @@ declare module '@vue/runtime-core' {
     GuestForm: typeof import('./src/components/GuestForm/index.vue')['default']
     Home: typeof import('./src/views/Home.vue')['default']
     HomeLayout: typeof import('./src/layout/HomeLayout.vue')['default']
-    Indexe: typeof import('./src/components/CommunityPhotos/FancyBox/indexe.vue')['default']
     Invitation: typeof import('./src/views/Invitation.vue')['default']
     InvitationForm: typeof import('./src/components/InvitationForm/index.vue')['default']
     Login: typeof import('./src/views/Login.vue')['default']
@@ -40,6 +39,5 @@ declare module '@vue/runtime-core' {
     Timeline: typeof import('./src/components/CommunityPhotos/Timeline/index.vue')['default']
     Timer: typeof import('./src/components/Timer/index.vue')['default']
     Track: typeof import('./src/components/Playlist/Track/index.vue')['default']
-    UserNavigation: typeof import('./src/components/CommunityPhotos/UserNavigation/index.vue')['default']
   }
 }
