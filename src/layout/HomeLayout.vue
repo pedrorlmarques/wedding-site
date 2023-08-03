@@ -3,7 +3,7 @@
 		<div class="relative">
 			<img class="groom-img" :src="GroomsImgUrl" alt="noivos" />
 			<div class="relative container z-10 mx-auto px-2 sm:px-32">
-				<Navigation :with-navigation="false" />
+				<Navigation />
 				<Timer class="my-4" />
 				<h1 class="wedding-font">Maria Inês e Pedro</h1>
 			</div>

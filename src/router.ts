@@ -25,20 +25,28 @@ const routes = [
 		component: () => import('@/views/Invitation.vue'),
 	},
 	{
-		path: '/fotos',
-		name: 'CommunityPhotos',
-		meta: {
-			requiresAuth: true,
-		},
-		component: () => import('@/views/CommunityPhotos.vue'),
-	},
-	{
 		path: '/playlist',
 		name: 'Playlist',
 		meta: {
 			requiresAuth: true,
 		},
 		component: () => import('@/views/Playlist.vue'),
+	},
+	{
+		path: '/gift',
+		name: 'Prenda',
+		meta: {
+			requiresAuth: true,
+		},
+		component: () => import('@/views/Gift.vue'),
+	},
+	{
+		path: '/menu',
+		name: 'Menu',
+		meta: {
+			requiresAuth: true,
+		},
+		component: () => import('@/views/Menu.vue'),
 	},
 	{
 		path: '/register',

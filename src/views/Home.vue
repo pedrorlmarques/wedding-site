@@ -38,7 +38,7 @@
 						então sugira as melhores músicas nesta fantástica Playlist!
 					</template>
 				</AnchorToPagesButton>
-				<AnchorToPagesButton title="Fotografias" path="/fotos">
+				<AnchorToPagesButton title="Fotografias" path="/fotos" disabled>
 					<template #icon>
 						<CameraSvg />
 					</template>
@@ -46,7 +46,7 @@
 						Faça upload das várias fotografias que vai tirar no nosso casamento!
 					</template>
 				</AnchorToPagesButton>
-				<AnchorToPagesButton title="Menu" path="/menu" disabled>
+				<AnchorToPagesButton title="Menu" path="/menu">
 					<template #icon>
 						<ForkAndSpoonSvg />
 					</template>
@@ -54,10 +54,7 @@
 						Não sabe o Menu? Aqui pode ver em detalhe!
 					</template>
 				</AnchorToPagesButton>
-				<AnchorToPagesButton
-					title="Prenda"
-					href="https://zgymwxdubdiijrxkdttl.supabase.co/storage/v1/object/public/img/comprovativoIBAN.pdf?t=2023-07-26T07%3A53%3A25.237Z"
-					target="_blank">
+				<AnchorToPagesButton title="Prenda" path="/gift" target="_blank">
 					<template #icon>
 						<GiftSvg />
 					</template>

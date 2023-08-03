@@ -108,7 +108,8 @@
 	</nav>
 </template>
 <script setup lang="ts">
-	import { ref, computed } from 'vue';
+	import { computed, ref } from 'vue';
+	import { useRouter } from 'vue-router';
 	import { onClickOutside, useWindowSize } from '@vueuse/core';
 
 	import HeartSvg from '@assets/heart.svg?component';
@@ -117,7 +118,8 @@
 	import ArrowSvg from '@assets/arrow-down-up.svg?component';
 
 	import { useAuth } from '@/composables/useAuth';
-	import { useRouter } from 'vue-router';
+
+	import { dashboardLinks } from '@/utils/navigation';
 
 	defineProps({
 		withNavigation: {
@@ -139,40 +141,6 @@
 
 	const user = computed(() => userSession.value?.user);
 	const isDesktop = computed(() => windowWidth.value >= 768);
-
-	const dashboardLinks = ref([
-		{
-			link: '/',
-			label: 'Home',
-		},
-		{
-			link: '/convite',
-			label: 'Convite',
-		},
-		{
-			label: 'Sessão Noivado',
-			href: 'https://home.mycloud.com/action/share/325d25fe-b184-403e-b388-4f054c6ee7d9',
-			target: '_blank',
-		},
-		{
-			link: '/playlist',
-			label: 'Playlist',
-		},
-		{
-			link: '/fotos',
-			label: 'Fotografias',
-		},
-		{
-			link: '/menu',
-			label: 'Menu',
-			disabled: true,
-		},
-		{
-			label: 'Prenda',
-			href: 'https://zgymwxdubdiijrxkdttl.supabase.co/storage/v1/object/public/img/comprovativoIBAN.pdf?t=2023-07-26T07%3A53%3A25.237Z',
-			target: '_blank',
-		},
-	]);
 
 	onClickOutside(menu, () => (openMenu.value = false));
 	onClickOutside(
