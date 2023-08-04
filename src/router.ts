@@ -33,6 +33,14 @@ const routes = [
 		component: () => import('@/views/Playlist.vue'),
 	},
 	{
+		path: '/fotos',
+		name: 'Fotografias',
+		meta: {
+			requiresAuth: true,
+		},
+		component: () => import('@/views/CommunityPhotos.vue'),
+	},
+	{
 		path: '/gift',
 		name: 'Prenda',
 		meta: {
@@ -95,9 +103,13 @@ router.beforeEach(async (to, _from, next) => {
 	} = await supabase.auth.getUser();
 	const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
 
-	if (requiresAuth && !user) next('/login');
-	else if (!requiresAuth && user) next('/');
-	else next();
+	if (requiresAuth && !user) {
+		next('/login');
+	} else if (!requiresAuth && user) {
+		next('/');
+	} else {
+		next();
+	}
 });
 
 export default router;

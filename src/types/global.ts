@@ -50,4 +50,5 @@ declare interface IPublication {
 		name: string;
 		type: string;
 	}[];
+	likes: string[];
 }

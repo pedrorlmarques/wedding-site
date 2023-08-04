@@ -38,7 +38,7 @@
 						então sugira as melhores músicas nesta fantástica Playlist!
 					</template>
 				</AnchorToPagesButton>
-				<AnchorToPagesButton title="Fotografias" path="/fotos" disabled>
+				<AnchorToPagesButton title="Fotografias" path="/fotos">
 					<template #icon>
 						<CameraSvg />
 					</template>

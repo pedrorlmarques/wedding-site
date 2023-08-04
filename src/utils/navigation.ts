@@ -33,10 +33,9 @@ export const dashboardLinks = [
 			'Conhece bem os noivos e sabe quais são os seus gostos? Muito bem, então sugira as melhores músicas nesta fantástica Playlist!',
 	},
 	{
-		link: '/fotografias',
+		link: '/fotos',
 		label: 'Fotografias',
 		icon: CameraSvg,
-		disabled: true,
 		description:
 			'Faça upload das várias fotografias que vai tirar no nosso casamento!',
 	},
