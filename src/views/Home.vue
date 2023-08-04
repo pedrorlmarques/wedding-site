@@ -65,6 +65,17 @@
 						o nosso Iban
 					</template>
 				</AnchorToPagesButton>
+				<AnchorToPagesButton
+					title="Inquérito"
+					href="https://forms.gle/iDNgZmnWZ6pbuZyD9"
+					target="_blank">
+					<template #icon>
+						<SurveySvg />
+					</template>
+					<template #description>
+						Dá-nos uma opinião sobre o website do Casamento!
+					</template>
+				</AnchorToPagesButton>
 			</div>
 		</div>
 	</HomeLayout>
@@ -77,28 +88,20 @@
 	import DiscoBallSvg from '@/assets/disco-ball.svg?component';
 	import ForkAndSpoonSvg from '@/assets/fork-and-spoon.svg?component';
 	import GiftSvg from '@/assets/gift.svg?component';
+	import SurveySvg from '@/assets/survey.svg?component';
 </script>
 
 <style scoped lang="postcss">
-	svg > .st0 {
-		@apply fill-current text-secondary-500;
-	}
-
 	div.hr-heart {
 		@apply relative clear-both my-4 block h-auto overflow-hidden whitespace-nowrap w-full text-center;
 
 		& span.first-line,
 		& span.second-line {
-			@apply relative inline-block align-middle mx-2 w-full max-w-[20vw] h-[1px] left-0 top-1/2 -mt-[1px] border-t-[1px] border-secondary-200;
-		}
-		& span.first-line {
+			@apply relative inline-block align-middle mx-2 w-full max-w-[20vw] h-[1px] left-0 top-1/2 -mt-[1px] border-t border-secondary-200;
 		}
 
 		& svg {
 			@apply inline-block align-middle w-4 h-4 stroke-primary-400 stroke-[3px];
-		}
-
-		& span.second-line {
 		}
 	}
 </style>

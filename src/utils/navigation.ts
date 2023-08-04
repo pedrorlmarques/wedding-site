@@ -4,6 +4,7 @@ import CameraSvg from '@/assets/camera.svg?raw';
 import DiscoBallSvg from '@/assets/disco-ball.svg?raw';
 import ForkAndSpoonSvg from '@/assets/fork-and-spoon.svg?raw';
 import GiftSvg from '@/assets/gift.svg?raw';
+import SurveySvg from '@/assets/survey.svg?raw';
 
 export const dashboardLinks: NavigationLink[] = [
 	{
@@ -57,5 +58,13 @@ export const dashboardLinks: NavigationLink[] = [
 		icon: GiftSvg,
 		description:
 			'O melhor presente que nos podem dar é estarem presentes! <br /> No entanto, se tiverem a intenção de nos oferecer uma ajuda deixamos o nosso Iban',
+	},
+	{
+		label: 'Inquérito',
+		href: 'https://forms.gle/iDNgZmnWZ6pbuZyD9',
+		target: '_blank',
+		disabled: false,
+		icon: SurveySvg,
+		description: 'Dá-nos uma opinião sobre o website do Casamento!',
 	},
 ];

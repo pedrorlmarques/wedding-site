@@ -9,6 +9,20 @@
 			</div>
 		</div>
 		<slot />
+		<footer class="m-4 mb-0">
+			<div class="w-full max-w-screen-xl mx-auto p-4 md:py-8">
+				<hr
+					class="my-6 border-t border-secondary-200 mx-auto lg:my-8 max-w-[50vw]" />
+				<span class="block text-sm text-gray-500 text-center"
+					>© 2023
+					<a
+						href="https://pedropcruz.pt/"
+						class="hover:underline hover:opacity-50 text-primary-500"
+						>pedropcruz.pt</a
+					>. All Rights Reserved.</span
+				>
+			</div>
+		</footer>
 	</main>
 </template>
 <script setup>
