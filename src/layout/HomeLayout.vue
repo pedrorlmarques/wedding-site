@@ -17,6 +17,7 @@
 					>© 2023
 					<a
 						href="https://pedropcruz.pt/"
+						target="_blank"
 						class="hover:underline hover:opacity-50 text-primary-500"
 						>pedropcruz.pt</a
 					>. All Rights Reserved.</span
