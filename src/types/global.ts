@@ -1,3 +1,13 @@
+declare interface NavigationLink {
+	link?: string;
+	label: string;
+	icon?: string;
+	description?: string;
+	href?: string;
+	target?: string;
+	disabled?: boolean;
+}
+
 declare interface Credentials {
 	email: string;
 	password: string;

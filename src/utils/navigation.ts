@@ -5,7 +5,7 @@ import DiscoBallSvg from '@/assets/disco-ball.svg?raw';
 import ForkAndSpoonSvg from '@/assets/fork-and-spoon.svg?raw';
 import GiftSvg from '@/assets/gift.svg?raw';
 
-export const dashboardLinks = [
+export const dashboardLinks: NavigationLink[] = [
 	{
 		link: '/',
 		label: 'Home',
@@ -13,6 +13,7 @@ export const dashboardLinks = [
 	{
 		link: '/convite',
 		label: 'Convite',
+		disabled: false,
 		icon: WeddingInvitationSvg,
 		description:
 			'Adicione as pessoas que vão ao casamento bem como as suas restrições alimentares!',
@@ -21,6 +22,7 @@ export const dashboardLinks = [
 		label: 'Sessão Noivado',
 		href: 'https://home.mycloud.com/action/share/325d25fe-b184-403e-b388-4f054c6ee7d9',
 		target: '_blank',
+		disabled: false,
 		icon: HeartSvg,
 		description:
 			'Os noivos tornaram-se modelos por um dia? Veja as fotografias da sessão de noivado!',
@@ -28,6 +30,7 @@ export const dashboardLinks = [
 	{
 		link: '/playlist',
 		label: 'Playlist',
+		disabled: false,
 		icon: DiscoBallSvg,
 		description:
 			'Conhece bem os noivos e sabe quais são os seus gostos? Muito bem, então sugira as melhores músicas nesta fantástica Playlist!',
@@ -35,6 +38,7 @@ export const dashboardLinks = [
 	{
 		link: '/fotos',
 		label: 'Fotografias',
+		disabled: false,
 		icon: CameraSvg,
 		description:
 			'Faça upload das várias fotografias que vai tirar no nosso casamento!',
@@ -42,12 +46,14 @@ export const dashboardLinks = [
 	{
 		link: '/menu',
 		label: 'Menu',
+		disabled: false,
 		icon: ForkAndSpoonSvg,
 		description: 'Não sabe o Menu? Aqui pode ver em detalhe!',
 	},
 	{
 		label: 'Prenda',
 		link: '/gift',
+		disabled: false,
 		icon: GiftSvg,
 		description:
 			'O melhor presente que nos podem dar é estarem presentes! <br /> No entanto, se tiverem a intenção de nos oferecer uma ajuda deixamos o nosso Iban',
